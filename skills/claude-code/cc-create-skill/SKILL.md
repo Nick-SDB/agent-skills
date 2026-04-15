@@ -1,5 +1,5 @@
 ---
-name: create-skill
+name: cc-create-skill
 description: Create a new Claude Code custom skill (slash command). Use when the user wants to make a new skill, add a slash command, or scaffold a SKILL.md file.
 argument-hint: "[skill-name]"
 ---

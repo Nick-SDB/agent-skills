@@ -1,5 +1,5 @@
 ---
-name: skip-permissions
+name: cc-skip-permissions
 description: Set up a shell alias so Claude Code skips all permission prompts. Use when the user wants to run Claude Code without interactive permission approvals, e.g. for automation, scripting, or unattended usage.
 disable-model-invocation: true
 argument-hint: "[shell]"
