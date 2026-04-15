@@ -8,6 +8,61 @@ argument-hint: "[team-goal]"
 
 Guide the user through designing a team of specialized subagents, then scaffold the agent files. A good team has clear role separation, minimal tool permissions, and descriptions that trigger correct auto-delegation.
 
+## Step 0 — Ensure agent-teams config is enabled (run this FIRST, always)
+
+The `TeamCreate` / `SendMessage` tools are part of Claude Code's **experimental agent-teams** feature. It is **disabled by default** and must be turned on before the team can be launched. Additionally, display defaults to **tmux split panes** so each teammate gets its own visible window.
+
+Do the following checks silently; only surface a problem to the user if something is missing.
+
+### 0a. Version check
+
+```bash
+claude --version   # must be >= 2.1.32
+```
+
+If older, tell the user to upgrade and stop.
+
+### 0b. Turn on the experimental flag in `~/.claude/settings.json`
+
+Ensure this key exists (merge with existing content — do **not** overwrite other fields):
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}
+```
+
+### 0c. Set tmux as the default display mode in `~/.claude.json`
+
+`~/.claude.json` is Claude Code's global runtime config (separate from `settings.json`). Use a small Python snippet to merge safely — this file is large and contains many other keys, so never overwrite it:
+
+```bash
+python3 -c "
+import json, shutil
+p = '/home/USER/.claude.json'
+shutil.copy(p, p + '.bak')
+with open(p) as f: d = json.load(f)
+d['teammateMode'] = 'tmux'
+with open(p, 'w') as f: json.dump(d, f, indent=2)
+"
+```
+
+### 0d. Verify the tmux prerequisite
+
+```bash
+which tmux && tmux -V           # must be installed
+echo "${TMUX:-NOT_IN_TMUX}"      # user should already be inside a tmux session
+```
+
+- If tmux is missing: tell the user to install it (e.g. `apt install tmux`) and stop.
+- If the user is **not** inside a tmux session: warn them that split-pane mode needs them to launch Claude Code from within `tmux`; offer to fall back to `teammateMode: "in-process"` if they prefer.
+
+### 0e. Tell the user to restart
+
+`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` and `teammateMode` are loaded at Claude Code startup. After writing the config, instruct the user to exit and relaunch `claude` (from inside tmux) before the team can actually be spawned. Team config created in the current session will still work, but new teammates won't appear in tmux panes until the restart.
+
 ## Step 1 — Clarify the goal
 
 If `$ARGUMENTS` is provided, treat it as the team's high-level goal. Otherwise ask:
@@ -108,9 +163,10 @@ Before finishing, verify:
 
 ## What to do
 
-1. Clarify the goal, scope, and execution style (Step 1).
-2. Propose the roster as a table and wait for confirmation (Step 2).
-3. Create the directory: `mkdir -p <scope>/agents`
-4. Write one `<agent-name>.md` per confirmed agent (Step 3).
-5. Write or update `README.md` describing the team (Step 4).
-6. Show the user the invocation examples (Step 5) and the checklist (best practices).
+1. **Enable agent-teams config and set tmux as default display mode (Step 0).** Do this first, every time — the feature is off by default and split-pane display must be explicitly configured.
+2. Clarify the goal, scope, and execution style (Step 1).
+3. Propose the roster as a table and wait for confirmation (Step 2).
+4. Create the directory: `mkdir -p <scope>/agents`
+5. Write one `<agent-name>.md` per confirmed agent (Step 3).
+6. Write or update `README.md` describing the team (Step 4).
+7. Show the user the invocation examples (Step 5) and the checklist (best practices).
