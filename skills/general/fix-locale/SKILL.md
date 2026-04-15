@@ -14,7 +14,16 @@ Detect and fix locale/UTF-8 encoding issues that cause CJK (Chinese, Japanese, K
 ```
 Current locale: !`locale 2>/dev/null || echo "locale command not found"`
 LANG variable: !`echo $LANG`
+TMUX session: !`echo "TMUX=$TMUX"`
 ```
+
+## Important: Check for tmux
+
+If `TMUX=$TMUX` shows a value (not empty), the session is running inside tmux. **Locale changes made to ~/.bashrc may not apply inside tmux** because tmux spawns a new session that does not source ~/.bashrc.
+
+If running inside tmux:
+- Tell the user: "You appear to be running inside tmux. Locale changes to ~/.bashrc won't apply inside the current tmux session. Please exit tmux completely, then source ~/.bashrc in a fresh terminal to apply the changes."
+- Do NOT say the fix is working if the user is in tmux - the verification should be done outside tmux.
 
 ## Step 1: Check for Locale Problems
 
@@ -99,9 +108,16 @@ echo "中文测试 Chinese test 日本語"
 
 All CJK characters should render correctly.
 
+**Note**: If you are inside tmux, exit tmux first and verify in a fresh terminal outside tmux. The locale changes to ~/.bashrc may not apply to existing tmux sessions.
+
 ## Output Summary
 
 Report to the user:
 1. What was wrong (which issues were detected)
 2. What files were modified
 3. Verification results showing characters now render correctly
+
+**Important**: Do NOT confidently say the fix is "working" or "complete". Instead:
+- Say something like "The configuration has been updated. Please verify in a new terminal session."
+- If in tmux, explicitly warn that verification must be done outside tmux
+- Remind the user that they may need to restart their terminal or tmux session for changes to take effect
