@@ -1,0 +1,126 @@
+{
+  "$schema": "schemas/registry.schema.json",
+  "format_version": 1,
+  "skills": [
+    {
+      "category": "general",
+      "name": "atomic-worker-pipeline",
+      "source": "skills/general/atomic-worker-pipeline",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "better-shit",
+      "source": "skills/general/better-shit",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "claude-code",
+      "name": "cc-create-agent-team",
+      "source": "skills/claude-code/cc-create-agent-team",
+      "targets": [
+        "claude-code"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "claude-code",
+      "name": "cc-create-skill",
+      "source": "skills/claude-code/cc-create-skill",
+      "targets": [
+        "claude-code"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "claude-code",
+      "name": "cc-skip-permissions",
+      "source": "skills/claude-code/cc-skip-permissions",
+      "targets": [
+        "claude-code"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "fix-locale",
+      "source": "skills/general/fix-locale",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "install-openspec",
+      "source": "skills/general/install-openspec",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "project-code-map",
+      "source": "skills/general/project-code-map",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "sync-and-ship",
+      "source": "skills/general/sync-and-ship",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "tmux-mouse-scroll",
+      "source": "skills/general/tmux-mouse-scroll",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "update-skill",
+      "source": "skills/general/update-skill",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    }
+  ],
+  "targets": [
+    "claude-code",
+    "codex",
+    "kimi"
+  ]
+}

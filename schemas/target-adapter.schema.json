@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Nick-SDB/agent-skills/master/schemas/target-adapter.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "display_name": {"minLength": 1, "type": "string"},
+    "format_version": {"const": 1},
+    "id": {"pattern": "^[a-z0-9-]+$", "type": "string"},
+    "instruction_file": {"pattern": "^[A-Za-z0-9._-]+$", "type": "string"},
+    "invocation_prefix": {"type": "string"},
+    "project_path": {"pattern": "^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$", "type": "string"},
+    "supports_symlink": {"type": "boolean"},
+    "user_path": {"pattern": "^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$", "type": "string"}
+  },
+  "required": [
+    "display_name",
+    "format_version",
+    "id",
+    "instruction_file",
+    "invocation_prefix",
+    "project_path",
+    "supports_symlink",
+    "user_path"
+  ],
+  "title": "Agent target adapter",
+  "type": "object"
+}

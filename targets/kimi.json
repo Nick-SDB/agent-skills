@@ -1,0 +1,11 @@
+{
+  "$schema": "../schemas/target-adapter.schema.json",
+  "display_name": "Kimi Code CLI",
+  "format_version": 1,
+  "id": "kimi",
+  "instruction_file": "AGENTS.md",
+  "invocation_prefix": "/skill:",
+  "project_path": ".kimi/skills",
+  "supports_symlink": true,
+  "user_path": ".kimi/skills"
+}

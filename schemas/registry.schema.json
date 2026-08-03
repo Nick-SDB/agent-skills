@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Nick-SDB/agent-skills/master/schemas/registry.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "format_version": {"const": 1},
+    "skills": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {"pattern": "^[a-z0-9-]+$", "type": "string"},
+          "name": {"maxLength": 64, "pattern": "^[a-z0-9-]+$", "type": "string"},
+          "source": {"pattern": "^skills/[a-z0-9-]+/[a-z0-9-]+$", "type": "string"},
+          "targets": {
+            "items": {"enum": ["claude-code", "codex", "kimi"]},
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "version": {"pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$", "type": "string"}
+        },
+        "required": ["category", "name", "source", "targets", "version"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "targets": {
+      "items": {"enum": ["claude-code", "codex", "kimi"]},
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": ["format_version", "skills", "targets"],
+  "title": "Agent skills registry",
+  "type": "object"
+}

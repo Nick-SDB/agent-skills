@@ -1,0 +1,11 @@
+{
+  "$schema": "../schemas/target-adapter.schema.json",
+  "display_name": "Codex",
+  "format_version": 1,
+  "id": "codex",
+  "instruction_file": "AGENTS.md",
+  "invocation_prefix": "$",
+  "project_path": ".agents/skills",
+  "supports_symlink": true,
+  "user_path": ".agents/skills"
+}

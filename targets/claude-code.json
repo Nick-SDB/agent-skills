@@ -1,0 +1,11 @@
+{
+  "$schema": "../schemas/target-adapter.schema.json",
+  "display_name": "Claude Code",
+  "format_version": 1,
+  "id": "claude-code",
+  "instruction_file": "CLAUDE.md",
+  "invocation_prefix": "/",
+  "project_path": ".claude/skills",
+  "supports_symlink": true,
+  "user_path": ".claude/skills"
+}

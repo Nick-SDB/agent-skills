@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Nick-SDB/agent-skills/master/schemas/rendered-manifest.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"const": "manifest.schema.json"},
+    "adapter": {
+      "additionalProperties": false,
+      "properties": {
+        "display_name": {"minLength": 1, "type": "string"},
+        "format_version": {"const": 1},
+        "id": {"pattern": "^[a-z0-9-]+$", "type": "string"},
+        "instruction_file": {"minLength": 1, "type": "string"},
+        "invocation_prefix": {"type": "string"},
+        "project_path": {"minLength": 1, "type": "string"},
+        "supports_symlink": {"type": "boolean"},
+        "user_path": {"minLength": 1, "type": "string"}
+      },
+      "required": [
+        "display_name",
+        "format_version",
+        "id",
+        "instruction_file",
+        "invocation_prefix",
+        "project_path",
+        "supports_symlink",
+        "user_path"
+      ],
+      "type": "object"
+    },
+    "adapter_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "format_version": {"const": 1},
+    "skills": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "files": {
+            "additionalProperties": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+            "type": "object"
+          },
+          "name": {"pattern": "^[a-z0-9-]{1,64}$", "type": "string"},
+          "source": {"pattern": "^skills/[a-z0-9-]+/[a-z0-9-]+$", "type": "string"},
+          "version": {"pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$", "type": "string"}
+        },
+        "required": ["files", "name", "source", "version"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "target": {"pattern": "^[a-z0-9-]+$", "type": "string"}
+  },
+  "required": [
+    "$schema",
+    "adapter",
+    "adapter_sha256",
+    "format_version",
+    "skills",
+    "target"
+  ],
+  "title": "Rendered agent-skills manifest",
+  "type": "object"
+}

@@ -1,29 +1,49 @@
 # agent-skills
 
-A collection of custom skills (slash commands) for [Claude Code](https://claude.ai/code).
+A portable collection of 11 Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
 
-## Skills
+## Repository layout
 
-### General
+```text
+registry.json                    canonical skill and target manifest
+schemas/                         JSON Schemas for source and rendered manifests
+skills/<category>/<name>/        portable skill sources
+targets/                         target discovery and invocation metadata
+tools/skillctl.py                validation and deterministic renderer
+tests/                           isolated standard-library tests
+```
 
-| Skill | Description |
-|---|---|
-| `atomic-worker-pipeline` | Design and implement a multi-machine multi-GPU async parallel worker pipeline using atomic file operations for coordination |
-| `fix-locale` | Detect and fix UTF-8/locale issues causing CJK characters to display as underscores or question marks |
-| `install-openspec` | Install and initialize OpenSpec (spec-driven development framework for AI coding assistants) |
-| `project-code-map` | Scaffold `CLAUDE.md` + `docs/code_map.md` agent-entry documentation in a project |
-| `sync-and-ship` | Sync the project's documentation index with the actual file tree, then commit and push |
-| `tmux-mouse-scroll` | Enable mouse wheel scrolling in tmux sessions |
-| `update-skill` | Update a skill in the cc-switch config directory and this repo, then commit and push |
+Portable sources use the common `SKILL.md` format with only `name` and `description` in YAML frontmatter. Target-specific wording is kept in minimal `adapters/<target>.md` overlays and appended only while rendering. Bundled links must remain inside their skill directory, and source symlinks, host-specific absolute paths, and vendor placeholders are rejected.
 
-### Claude Code
+## Targets
 
-| Skill | Description |
-|---|---|
-| `cc-create-agent-team` | Design and scaffold a Claude Code agent team — specialized subagents that collaborate on a task |
-| `cc-create-skill` | Create a new Claude Code custom skill (slash command) and scaffold its `SKILL.md` |
-| `cc-skip-permissions` | Set up a shell alias so Claude Code skips all permission prompts |
+| Target | Project skills | User skills | Invocation |
+|---|---|---|---|
+| Claude Code | `.claude/skills` | `~/.claude/skills` | `/<skill-name>` |
+| Codex | `.agents/skills` | `~/.agents/skills` | `$<skill-name>` |
+| Kimi Code CLI | `.kimi/skills` | `~/.kimi/skills` | `/skill:<skill-name>` |
 
-## Usage
+The three `cc-*` skills are Claude Code-specific. The eight general skills render for all three targets.
 
-Skills live under `skills/<category>/<skill-name>/SKILL.md`. Install them via [cc-switch](https://github.com/Nick-SDB/cc-switch) or copy them into `~/.claude/skills/`.
+## Validate and render
+
+The tooling requires Python 3.8 or newer and has no runtime package dependencies.
+
+```bash
+python3 tools/skillctl.py validate
+python3 tools/skillctl.py render --target all --output dist
+python3 tools/skillctl.py render --target all --output dist --check
+python3 -m unittest discover -s tests -v
+```
+
+`render` builds each selected target in a temporary directory before replacing `dist/<target>`. Every distribution contains `skills/`, `manifest.json`, and the matching `manifest.schema.json`. Manifests include SHA-256 checksums for every rendered skill file. Rendering the same revision twice produces byte-identical files; `--check` exits nonzero when an existing distribution is missing, modified, or contains unexpected files.
+
+## Add or update a skill
+
+1. Keep the folder name and frontmatter `name` identical and lowercase-hyphenated.
+2. Put purpose and trigger conditions in `description`; write the body as concise imperative instructions.
+3. Put reusable documentation in `references/`, deterministic helpers in `scripts/`, and output material in `assets/` only when needed.
+4. Add a target overlay only for wording that cannot remain portable.
+5. Update `registry.json`, run validation and tests, then inspect each rendered target.
+
+The repository validator enforces the same naming, frontmatter, resource-link, and 500-line limits used by the Agent Skills skill-creator workflow.
