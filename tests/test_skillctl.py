@@ -86,6 +86,27 @@ class SkillCtlRenderTests(unittest.TestCase):
             self.assertEqual(checked.returncode, 1)
             self.assertIn("content differs: skills/better-shit/SKILL.md", checked.stderr)
 
+    def test_check_rejects_symlinked_output_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_text:
+            root = Path(temp_text)
+            output = root / "dist"
+            rendered = run_skillctl("render", "--target", "codex", "--output", str(output))
+            self.assertEqual(rendered.returncode, 0, rendered.stderr)
+            skill_file = output / "codex" / "skills" / "better-shit" / "SKILL.md"
+            external_file = root / "external-skill.md"
+            external_file.write_bytes(skill_file.read_bytes())
+            skill_file.unlink()
+            skill_file.symlink_to(external_file)
+
+            checked = run_skillctl(
+                "render", "--target", "codex", "--output", str(output), "--check"
+            )
+
+            self.assertEqual(checked.returncode, 1)
+            self.assertIn(
+                "unexpected symlink: skills/better-shit/SKILL.md", checked.stderr
+            )
+
 
 class RepositoryLintTests(unittest.TestCase):
     def assert_lint_rejects(self, mutation: Callable[[Path], None], expected: str) -> None:
@@ -355,6 +376,23 @@ class SkillCtlInstallTests(unittest.TestCase):
             )
             self.assertEqual(override_install.returncode, 0, override_install.stderr)
             self.assertTrue((override / "agent-skills.lock.json").is_file())
+
+    def test_explicit_symlink_destination_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_text:
+            root = Path(temp_text)
+            real_destination = root / "real-skills"
+            real_destination.mkdir()
+            linked_destination = root / "skills-link"
+            linked_destination.symlink_to(real_destination, target_is_directory=True)
+
+            result = run_skillctl(
+                "install", "--target", "codex", "--destination", str(linked_destination)
+            )
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("destination must be a real directory path", result.stderr)
+            self.assertTrue(linked_destination.is_symlink())
+            self.assertEqual(list(real_destination.iterdir()), [])
 
 
 if __name__ == "__main__":

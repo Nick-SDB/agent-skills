@@ -409,6 +409,14 @@ def render_target(target: str, output_root: Path, *, check: bool = False) -> Non
 def compare_trees(expected: Path, actual: Path) -> list[str]:
     if not actual.is_dir():
         return [f"missing directory: {actual}"]
+    if actual.is_symlink():
+        return ["unexpected symlink: ."]
+    actual_paths = list(actual.rglob("*"))
+    actual_symlinks = {
+        path.relative_to(actual).as_posix()
+        for path in actual_paths
+        if path.is_symlink()
+    }
     expected_files = {
         path.relative_to(expected).as_posix(): sha256_file(path)
         for path in expected.rglob("*")
@@ -416,10 +424,10 @@ def compare_trees(expected: Path, actual: Path) -> list[str]:
     }
     actual_files = {
         path.relative_to(actual).as_posix(): sha256_file(path)
-        for path in actual.rglob("*")
-        if path.is_file()
+        for path in actual_paths
+        if path.is_file() and not path.is_symlink()
     }
-    differences = []
+    differences = [f"unexpected symlink: {path}" for path in sorted(actual_symlinks)]
     for path in sorted(expected_files.keys() - actual_files.keys()):
         differences.append(f"missing file: {path}")
     for path in sorted(actual_files.keys() - expected_files.keys()):
@@ -573,7 +581,10 @@ def write_json_atomic(path: Path, value: dict[str, Any]) -> None:
 
 def resolve_destination(args: argparse.Namespace, adapter: dict[str, Any]) -> Path:
     if args.destination is not None:
-        return args.destination.expanduser().resolve()
+        destination = args.destination.expanduser()
+        if destination.is_symlink():
+            raise SkillCtlError(f"destination must be a real directory path: {destination}")
+        return destination.resolve()
     if args.scope == "user":
         base = args.home.expanduser().resolve() if args.home is not None else Path.home().resolve()
         return base / adapter["user_path"]
