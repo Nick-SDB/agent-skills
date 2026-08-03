@@ -38,6 +38,33 @@ python3 -m unittest discover -s tests -v
 
 `render` builds each selected target in a temporary directory before replacing `dist/<target>`. Every distribution contains `skills/`, `manifest.json`, and the matching `manifest.schema.json`. Manifests include SHA-256 checksums for every rendered skill file. Rendering the same revision twice produces byte-identical files; `--check` exits nonzero when an existing distribution is missing, modified, or contains unexpected files.
 
+## Install and synchronize
+
+`install` and `sync` are idempotent aliases. Copy mode is the default; it leaves unrelated skill directories untouched and writes `agent-skills.lock.json` beside the managed skills.
+
+```bash
+# User scope using the target's standard path
+python3 tools/skillctl.py install --target codex
+
+# Project scope or an exact destination override
+python3 tools/skillctl.py sync --target claude-code --scope project --project-root /path/to/project
+python3 tools/skillctl.py sync --target kimi --destination /path/to/skills
+
+# Preview or verify without writing
+python3 tools/skillctl.py sync --target codex --dry-run
+python3 tools/skillctl.py sync --target codex --check
+```
+
+The lockfile records the target, install mode, source metadata, and SHA-256 checksums for every managed file. Updates and removals proceed only when installed content still matches that state. A conflicting unmanaged path or local edit is preserved and reported; use `--force` only when replacing it is intentional.
+
+Symlink mode is intended for development checkouts and points each installed skill at a persistent rendered distribution:
+
+```bash
+python3 tools/skillctl.py install --target codex --mode symlink --render-root /path/to/render-cache
+```
+
+Use a dedicated render root per independently managed checkout. `--home`, `--project-root`, `--destination`, and `--render-root` make every path explicit and support isolated automation. Omitting `--mode` during later syncs preserves the mode recorded in the lockfile.
+
 ## Add or update a skill
 
 1. Keep the folder name and frontmatter `name` identical and lowercase-hyphenated.
