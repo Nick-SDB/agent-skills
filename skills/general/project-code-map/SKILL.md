@@ -12,7 +12,7 @@ Create two coordinated files:
 
 Use `AGENTS.md` for a cross-agent project unless the repository or user selects another supported instruction filename. Do not create duplicate instruction systems.
 
-Read [reference/agent-instructions.md](reference/agent-instructions.md) and [reference/code_map.md](reference/code_map.md) as structural examples. Adapt all content to the target project.
+Read [references/agent-instructions.md](references/agent-instructions.md) and [references/code_map.md](references/code_map.md) as structural examples. Adapt all content to the target project.
 
 ## Inspect safely
 

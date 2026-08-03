@@ -3,15 +3,18 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+from collections.abc import Callable
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLCTL = ROOT / "tools" / "skillctl.py"
+COMMAND_TIMEOUT_SECONDS = 30
 
 
 def run_skillctl(*arguments: str) -> subprocess.CompletedProcess[str]:
@@ -21,6 +24,7 @@ def run_skillctl(*arguments: str) -> subprocess.CompletedProcess[str]:
         check=False,
         text=True,
         capture_output=True,
+        timeout=COMMAND_TIMEOUT_SECONDS,
     )
 
 
@@ -81,6 +85,66 @@ class SkillCtlRenderTests(unittest.TestCase):
             checked = run_skillctl("render", "--target", "kimi", "--output", str(output), "--check")
             self.assertEqual(checked.returncode, 1)
             self.assertIn("content differs: skills/better-shit/SKILL.md", checked.stderr)
+
+
+class RepositoryLintTests(unittest.TestCase):
+    def assert_lint_rejects(self, mutation: Callable[[Path], None], expected: str) -> None:
+        with tempfile.TemporaryDirectory() as temp_text:
+            repository = Path(temp_text) / "repository"
+            shutil.copytree(
+                ROOT,
+                repository,
+                ignore=shutil.ignore_patterns(".git", "dist", "release", "__pycache__", "*.pyc"),
+            )
+            mutation(repository)
+            result = subprocess.run(
+                [sys.executable, str(repository / "tools" / "skillctl.py"), "validate"],
+                cwd=repository,
+                check=False,
+                text=True,
+                capture_output=True,
+                timeout=COMMAND_TIMEOUT_SECONDS,
+            )
+            self.assertEqual(result.returncode, 1, result.stdout)
+            self.assertIn(expected, result.stderr)
+
+    def test_schema_dialect_is_linted(self) -> None:
+        def mutate(repository: Path) -> None:
+            path = repository / "schemas" / "registry.schema.json"
+            schema = json.loads(path.read_text())
+            schema["$schema"] = "https://json-schema.org/draft/2019-09/schema"
+            path.write_text(json.dumps(schema, indent=2) + "\n")
+
+        self.assert_lint_rejects(mutate, "expected JSON Schema draft 2020-12")
+
+    def test_frontmatter_is_linted(self) -> None:
+        def mutate(repository: Path) -> None:
+            path = repository / "skills" / "general" / "better-shit" / "SKILL.md"
+            path.write_text(path.read_text().replace("name: better-shit", "title: better-shit", 1))
+
+        self.assert_lint_rejects(mutate, "frontmatter fields must be exactly name, description")
+
+    def test_unreferenced_resource_is_linted(self) -> None:
+        def mutate(repository: Path) -> None:
+            path = repository / "skills" / "general" / "better-shit" / "assets" / "orphan.txt"
+            path.parent.mkdir()
+            path.write_text("orphan\n")
+
+        self.assert_lint_rejects(mutate, "bundled resource is not referenced directly from SKILL.md")
+
+    def test_absolute_path_is_linted(self) -> None:
+        def mutate(repository: Path) -> None:
+            path = repository / "skills" / "general" / "better-shit" / "SKILL.md"
+            path.write_text(path.read_text() + "\nRead /opt/company/private.conf before running.\n")
+
+        self.assert_lint_rejects(mutate, "contains a machine-specific absolute path")
+
+    def test_unresolved_placeholder_is_linted(self) -> None:
+        def mutate(repository: Path) -> None:
+            path = repository / "skills" / "general" / "better-shit" / "SKILL.md"
+            path.write_text(path.read_text() + "\nUse {{UNRESOLVED_VALUE}} here.\n")
+
+        self.assert_lint_rejects(mutate, "contains an unresolved host placeholder")
 
 
 class SkillCtlInstallTests(unittest.TestCase):

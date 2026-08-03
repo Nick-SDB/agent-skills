@@ -34,8 +34,17 @@ PORTABLE_LEAKS = {
     "Claude argument placeholder": re.compile(r"\$ARGUMENTS|\$\{CLAUDE_(?:SKILL|PROJECT)_DIR\}"),
     "Claude dynamic context": re.compile(r"!`"),
     "host-specific tool name": re.compile(r"\*\*(?:Glob|Read|Write|Bash|Grep|Agent|AskUserQuestion)\*\*"),
-    "local NFS path": re.compile(r"/nfs/"),
 }
+MACHINE_PATH_RE = re.compile(
+    r"(?<![A-Za-z0-9:.~/])(?:/(?!/)[A-Za-z0-9._~-]+(?:/[A-Za-z0-9._~-]+)+|"
+    r"[A-Za-z]:\\|\\\\[A-Za-z0-9._-]+\\)"
+)
+PLACEHOLDER_RE = re.compile(
+    r"\$ARGUMENTS|\$\{(?:CLAUDE|CODEX|KIMI)_[A-Z0-9_]+\}|"
+    r"\{\{[^{}\n]+\}\}|__(?:TODO|PLACEHOLDER)__"
+)
+ALLOWED_SKILL_ENTRIES = {"SKILL.md", "adapters", "agents", "assets", "references", "scripts"}
+RESOURCE_DIRECTORIES = {"assets", "references", "scripts"}
 
 
 class SkillCtlError(RuntimeError):
@@ -152,6 +161,34 @@ def check_markdown_links(skill_dir: Path, path: Path, errors: list[str]) -> None
             errors.append(f"{relative(path)}: missing linked resource: {raw_target}")
 
 
+def check_skill_resources(source: Path, skill_text: str, errors: list[str]) -> None:
+    for child in sorted(source.iterdir()):
+        if child.name not in ALLOWED_SKILL_ENTRIES:
+            errors.append(f"{relative(child)}: unexpected top-level skill entry")
+    for directory_name in RESOURCE_DIRECTORIES:
+        resource_root = source / directory_name
+        if not resource_root.exists():
+            continue
+        if not resource_root.is_dir():
+            errors.append(f"{relative(resource_root)}: bundled resource path must be a directory")
+            continue
+        for resource in sorted(path for path in resource_root.rglob("*") if path.is_file()):
+            resource_name = resource.relative_to(source).as_posix()
+            if resource_name not in skill_text:
+                errors.append(
+                    f"{relative(resource)}: bundled resource is not referenced directly from SKILL.md"
+                )
+
+
+def check_content_leaks(source: Path, errors: list[str]) -> None:
+    for path in sorted(candidate for candidate in source.rglob("*") if candidate.is_file()):
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if MACHINE_PATH_RE.search(text):
+            errors.append(f"{relative(path)}: contains a machine-specific absolute path")
+        if PLACEHOLDER_RE.search(text):
+            errors.append(f"{relative(path)}: contains an unresolved host placeholder")
+
+
 def validate_repository() -> dict[str, Any]:
     registry = load_registry()
     errors: list[str] = []
@@ -224,8 +261,11 @@ def validate_repository() -> dict[str, Any]:
                 errors.append(f"{source_text}: frontmatter name does not match registry")
             if not fields["description"] or len(fields["description"]) > 1024:
                 errors.append(f"{source_text}: description must contain 1-1024 characters")
-        if len(skill_file.read_text(encoding="utf-8").splitlines()) > 500:
+        skill_text = skill_file.read_text(encoding="utf-8")
+        if len(skill_text.splitlines()) > 500:
             errors.append(f"{source_text}: SKILL.md exceeds 500 lines")
+        check_skill_resources(source, skill_text, errors)
+        check_content_leaks(source, errors)
 
         for path in sorted(source.rglob("*")):
             if path.is_symlink():
@@ -314,6 +354,7 @@ def render_target(target: str, output_root: Path, *, check: bool = False) -> Non
                 output_path = destination / relative_path
                 output_path.parent.mkdir(parents=True, exist_ok=True)
                 output_path.write_bytes(path.read_bytes())
+                output_path.chmod(path.stat().st_mode & 0o777)
 
             overlay = source / "adapters" / f"{target}.md"
             if overlay.is_file():

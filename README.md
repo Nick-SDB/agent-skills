@@ -10,6 +10,7 @@ schemas/                         JSON Schemas for source and rendered manifests
 skills/<category>/<name>/        portable skill sources
 targets/                         target discovery and invocation metadata
 tools/skillctl.py                validation and deterministic renderer
+tools/build_release.py           reproducible release archive builder
 tests/                           isolated standard-library tests
 ```
 
@@ -74,3 +75,27 @@ Use a dedicated render root per independently managed checkout. `--home`, `--pro
 5. Update `registry.json`, run validation and tests, then inspect each rendered target.
 
 The repository validator enforces the same naming, frontmatter, resource-link, and 500-line limits used by the Agent Skills skill-creator workflow.
+
+## CI and releases
+
+Run the same core checks as CI from the repository root:
+
+```bash
+python3 -m py_compile tools/skillctl.py tools/build_release.py tests/*.py
+python3 tools/skillctl.py validate
+python3 tools/skillctl.py render --target all --output dist
+python3 tools/skillctl.py render --target all --output dist --check
+python3 -m unittest discover -s tests -v
+```
+
+The CI workflow runs on every pull request and push with a ten-minute job limit. Test subprocesses also have explicit deadlines, so a stalled renderer, installer, or archive build fails instead of waiting indefinitely.
+
+Build the three target archives and their checksum manifest with:
+
+```bash
+python3 tools/build_release.py --output release
+(cd release && sha256sum --check SHA256SUMS)       # Linux
+(cd release && shasum -a 256 --check SHA256SUMS)  # macOS
+```
+
+Each archive has sorted members, normalized ownership, permissions, and timestamps, and a gzip header with a fixed timestamp. Building the same revision twice produces byte-identical archives and `SHA256SUMS`. Tags matching `v*` run `.github/workflows/tag-artifacts.yml`, verify the checksums, and upload the files as a workflow artifact. The workflow does not create or publish a GitHub release.
