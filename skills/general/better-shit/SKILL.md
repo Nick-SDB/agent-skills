@@ -1,67 +1,42 @@
 ---
 name: better-shit
-description: Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
-license: MIT
+description: Apply disciplined coding guidelines that prevent overcomplication and unrelated edits. Use when implementing, reviewing, debugging, or refactoring code with verifiable outcomes.
 ---
 
 # Karpathy Guidelines
 
-Behavioral guidelines to reduce common LLM coding mistakes, derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+Bias toward caution over speed, while using judgment for trivial work.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+## Think before coding
 
-## 1. Think Before Coding
+- State material assumptions and uncertainty.
+- Present meaningfully different interpretations instead of choosing silently.
+- Identify the simplest viable approach.
+- Stop and ask when missing information could change the result.
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+## Keep the solution small
 
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+- Implement only requested behavior.
+- Avoid abstractions, configurability, and defensive branches without a demonstrated need.
+- Prefer a short direct implementation over speculative infrastructure.
+- Reconsider the design when the code is much larger than the behavior warrants.
 
-## 2. Simplicity First
+## Make surgical changes
 
-**Minimum code that solves the problem. Nothing speculative.**
+- Touch only lines that support the requested outcome.
+- Match the surrounding style.
+- Do not refactor, reformat, or delete unrelated code.
+- Remove only the imports, variables, or helpers made obsolete by the current change.
+- Report unrelated problems instead of silently fixing them.
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+## Work toward evidence
 
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+Convert requests into explicit checks, for example:
 
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
+```text
+1. Reproduce the bug -> verify the failing test
+2. Apply the smallest fix -> verify the focused test
+3. Check regressions -> verify the relevant suite
 ```
 
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+Do not claim completion until the stated checks pass or the blocker is reported precisely.

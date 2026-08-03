@@ -1,73 +1,40 @@
 ---
 name: install-openspec
-description: Install and initialize OpenSpec (spec-driven development framework for AI coding assistants). Use when the user wants to set up OpenSpec in a project or install it globally.
-disable-model-invocation: true
-argument-hint: "[--tools claude,cursor,...]"
+description: Install and initialize OpenSpec for one or more coding agents. Use when setting up spec-driven development in a project or verifying an OpenSpec installation.
 ---
 
 # Install OpenSpec
 
-OpenSpec is a spec-driven development (SDD) framework by Fission-AI that helps AI coding assistants and developers agree on requirements before writing code.
+Install OpenSpec only after confirming the requested scope and target agents.
 
-- **Repo**: https://github.com/Fission-AI/OpenSpec
-- **Site**: https://openspec.dev/
+## Check prerequisites
 
-## Prerequisites
+1. Confirm Node.js meets OpenSpec's current minimum version.
+2. Detect the user's preferred package manager.
+3. Check whether `openspec` is already installed and report its version.
 
-- Node.js >= v20.19.0
+## Install
 
-Check if Node.js is installed and meets the version requirement. If not, tell the user to install or upgrade Node.js first.
-
-## Steps
-
-### 1. Install OpenSpec globally
-
-Try the user's preferred package manager in this order of preference (check which is available):
+Use the preferred package manager, for example:
 
 ```bash
 npm install -g @fission-ai/openspec@latest
-# or
-pnpm add -g @fission-ai/openspec@latest
-# or
-yarn global add @fission-ai/openspec@latest
-# or
-bun add -g @fission-ai/openspec@latest
 ```
 
-Verify installation with `openspec --version`.
-
-### 2. Initialize in the current project
+Offer a no-global-install alternative when appropriate:
 
 ```bash
-openspec init
+npx @fission-ai/openspec@latest init
 ```
 
-If $ARGUMENTS is provided (e.g. `--tools claude,cursor`), pass it along:
+Verify a global installation with `openspec --version`.
 
-```bash
-openspec init $ARGUMENTS
-```
+## Initialize
 
-If no arguments given, default to Claude Code:
+1. Confirm the project root.
+2. Determine the target agent identifiers from the request and installed tools; do not default silently to one vendor.
+3. Run `openspec init --tools <comma-separated-targets>` when targets are known, or `openspec init` for interactive selection.
+4. Preserve existing OpenSpec configuration and stop for confirmation before replacing conflicting files.
+5. Report created files and the next OpenSpec command to run.
 
-```bash
-openspec init --tools claude
-```
-
-This creates the `.openspec/` directory with spec files and configures tool-specific settings.
-
-### 3. Supported tools
-
-If the user asks which tools are supported, the full list is:
-
-`amazon-q`, `antigravity`, `auggie`, `bob`, `claude`, `cline`, `codex`, `codebuddy`, `continue`, `costrict`, `crush`, `cursor`, `factory`, `forgecode`, `gemini`, `github-copilot`, `iflow`, `junie`, `kilocode`, `kiro`, `opencode`, `pi`, `qoder`, `qwen`, `roocode`, `trae`, `windsurf`
-
-Multiple tools can be specified: `openspec init --tools claude,cursor,windsurf`
-
-## Quick usage (without global install)
-
-If the user prefers not to install globally:
-
-```bash
-npx @fission-ai/openspec@latest init --tools claude
-```
+Consult the current OpenSpec help output when target identifiers or prerequisites differ from these examples.

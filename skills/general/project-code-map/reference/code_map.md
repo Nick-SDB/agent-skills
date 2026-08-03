@@ -2,9 +2,9 @@
 
 > **This is the canonical index of every library module, runnable script, and
 > document in the project.** It is the first thing a new agent should read
-> after `CLAUDE.md`. Every file under `src/` and `scripts/` appears here with
+> after the root agent instruction file. Every file under `src/` and `scripts/` appears here with
 > a one-line purpose statement and a Phase tag. If you add / rename / delete a
-> file, update this map in the same commit — the CLAUDE.md points here, and
+> file, update this map in the same commit — the instruction file points here, and
 > this file is the ground truth of "what does X do".
 
 ---
@@ -150,7 +150,7 @@ Memorize these before reading any Phase code.
 
 ---
 
-## Hard rules (duplicated in CLAUDE.md)
+## Hard rules (duplicated in the agent instruction file)
 
 - **DO NOT** modify `submodules/Wan2.1/`. Use hooks / monkey-patches instead. All three phases have respected this rule.
 - **DO NOT** run `pixi install -e wan`. It would clobber the pip-installed torch / flash-attn / diffusers / lpips / piq / scikit-image. Use `pixi run -e wan pip install <pkg>` for new deps.
@@ -195,9 +195,9 @@ Each archive contains `proposal.md`, `design.md`, `specs/`, `tasks.md`, `.opensp
 | Rename a file | Update the row's path |
 | Delete a file | Remove the row AND note in that Phase's summary doc |
 | Start a new Phase | Add a section under "Quick state" + pipelines section |
-| Change a hard rule | Update both this file AND `CLAUDE.md` |
+| Change a hard rule | Update both this file and the agent instruction file |
 | Change `WAN_2_1_OP_CONFIG` or `PRUNE_HOOK_ORDER` | Update the Key concepts table + the authoritative docs (`flash_decoder_block_map.md` / `flash_decoder_pruning_map.md`) |
 
-> The CLAUDE.md file is an always-loaded tripwire for agents. This file
+> The root agent instruction file is an always-loaded tripwire. This file
 > (`code_map.md`) is the detailed reference agents consult once they've seen
-> the CLAUDE.md pointer. Keep both in sync.
+> its pointer. Keep both in sync.

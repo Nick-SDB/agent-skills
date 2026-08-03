@@ -1,77 +1,32 @@
 ---
 name: update-skill
-description: Update a skill in both the cc-switch config directory and the agent-skills repository, then commit and push changes.
-argument-hint: "<skill-name>"
-allowed-tools: Bash Glob Grep Read Write Edit
+description: Update a skill in its canonical repository and synchronize an explicitly configured development copy. Use when revising an existing skill while preserving validation and version-control safety.
 ---
 
-# Update Skill
+# Update a Skill
 
-Update a skill in both the cc-switch config directory and the agent-skills repository, then commit and push to git.
+Treat the checked-out repository as the source of truth. Obtain the skill name, repository root, and optional development-copy directory from the request or repository configuration; never assume machine-specific paths.
 
-## Skill Paths
+## Locate and inspect
 
-- **cc-switch dir**: `/nfs/AE/shidebo/app/cc-switch/config/skills/<skill-name>/`
-- **repo dir**: `/nfs/AE/shidebo/code/agent-skills/skills/<category>/<skill-name>/`
+1. Confirm the repository root and cleanly identify the skill directory.
+2. Read the canonical `SKILL.md` and every referenced resource.
+3. Inspect an optional development copy without overwriting it.
+4. Compare both copies and surface local divergence before editing.
 
-The skill must exist under the repo in one of the categories under `/nfs/AE/shidebo/code/agent-skills/skills/`.
+## Update
 
-## Steps
+1. Change the canonical skill first.
+2. Keep frontmatter limited to `name` and `description`.
+3. Preserve required scripts, references, and assets.
+4. Keep the body concise, imperative, and free of host-specific tool names or local absolute paths.
+5. Run the repository's skill validator and relevant tests.
 
-### Step 1: Identify the Skill Location
+## Synchronize and commit
 
-Run this to find the skill in the repo:
+1. Show the diff and validation results.
+2. Synchronize an explicitly configured development copy only after confirming that it has no uncommitted divergence; otherwise stop with a conflict report.
+3. Propose a focused commit message and commit only with user authorization.
+4. Push only when the user explicitly requests it and the target branch is confirmed.
 
-```bash
-# Find the skill in the repo
-skill_name="$ARGUMENTS"
-find /nfs/AE/shidebo/code/agent-skills/skills -type d -name "$skill_name"
-```
-
-Also check if it exists in cc-switch:
-
-```bash
-ls -la /nfs/AE/shidebo/app/cc-switch/config/skills/"$skill_name"/
-```
-
-### Step 2: Read Current Content
-
-1. Read the current SKILL.md from the repo (this is the source of truth)
-2. Read any existing files in cc-switch if they exist
-
-### Step 3: Make Updates
-
-Edit the skill files as needed. You can update:
-- The SKILL.md in the repo (primary)
-- Copy to cc-switch if needed (for immediate testing/deployment)
-
-### Step 4: Commit and Push
-
-After making changes, commit and push the repo changes:
-
-```bash
-cd /nfs/AE/shidebo/code/agent-skills
-
-# Check status
-git status
-
-# Add the changed files
-git add skills/<category>/<skill-name>/
-
-# Commit with a message
-git commit -m "Update skill: $ARGUMENTS
-
-Updated skill content.
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
-
-# Push to remote
-git push
-```
-
-## Output
-
-Report to the user:
-1. What files were changed
-2. The git commit URL (if available)
-3. Any notes about the cc-switch symlink if it exists
+Report canonical files changed, synchronized destinations, validation results, and any remaining divergence.

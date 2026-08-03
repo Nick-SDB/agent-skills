@@ -1,18 +1,16 @@
 ---
 name: cc-create-agent-team
-description: Create and manage Claude Code agent teams for parallel work. Use when user wants to coordinate multiple Claude instances, spawn teammates, or delegate work to a team.
-argument-hint: "[team-description]"
+description: Create and manage Claude Code agent teams for parallel work. Use when coordinating multiple Claude instances, assigning independent work, or collecting parallel reviews.
 ---
 
-# Create Agent Team
+# Create a Claude Code Agent Team
 
-Help the user create and manage Claude Code agent teams for parallel work.
+Use Claude Code agent teams only when independent parallel work will outweigh coordination cost.
 
-## ⚠️ Prerequisites: Enable Agent Teams First
+## Prepare
 
-Agent teams are experimental and **disabled by default**. You MUST enable them before use:
-
-**In settings.json (recommended):**
+1. Check `claude --version`; require Claude Code 2.1.32 or newer.
+2. Confirm that agent teams are enabled in settings or the environment:
 
 ```json
 {
@@ -22,111 +20,35 @@ Agent teams are experimental and **disabled by default**. You MUST enable them b
 }
 ```
 
-Or set as an environment variable in your shell:
+3. Identify independent tasks, expected outputs, file ownership, and the completion condition.
+4. Prefer ordinary subagents for simple, sequential, or tightly coupled work.
 
-```bash
-export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-```
+## Design the team
 
-> **Important:** Agent teams require Claude Code v2.1.32 or higher. Check with `claude --version`
+- Use three to five teammates for most tasks.
+- Give each teammate a bounded assignment and enough context to work independently.
+- Assign different files or subsystems to avoid edit conflicts.
+- Require a plan before edits when the work is risky or ambiguous.
+- Keep integration and final verification with the team lead.
 
-## When to Use Agent Teams
+Good candidates include parallel research, competing debugging hypotheses, cross-layer implementation, and multi-perspective review. Avoid teams for same-file edits, dependency-heavy sequences, or small focused tasks.
 
-Agent teams are best for parallel exploration tasks where multiple perspectives add value:
+## Run and coordinate
 
-- **Research & Review**: Multiple teammates investigate different aspects simultaneously
-- **New Features**: Teammates work on independent parts without interference
-- **Debugging with Competing Hypotheses**: Parallel investigation of different theories
-- **Cross-layer Coordination**: Frontend, backend, and testing changes in parallel
+1. Create the team and task list from the requested work.
+2. Assign owners explicitly; do not rely on teammates discovering ownership.
+3. Monitor the shared task list and mailbox.
+4. Redirect stalled or overlapping work promptly.
+5. Wait for every required teammate result before integrating.
+6. Review all results, resolve conflicts, and run the combined verification.
+7. Ask teammates to shut down, then clean up the team.
 
-**Don't use agent teams for:**
-- Sequential tasks
-- Same-file edits
-- Work with many dependencies
-- Simple, focused tasks (use subagents instead)
+Use in-process display by default. Use split panes only when tmux or iTerm2 is available and separate terminals improve monitoring. Configure the mode with `claude --teammate-mode in-process` or the `teammateMode` setting.
 
-## How Agent Teams Work
+## Constraints
 
-| Component | Role |
-|-----------|------|
-| **Team Lead** | Main Claude session that creates, generates, and coordinates teammates |
-| **Teammates** | Independent Claude Code instances handling assigned tasks |
-| **Task List** | Shared work items that teammates claim and complete |
-| **Mailbox** | Message system for inter-agent communication |
-
-## Display Modes
-
-- **In-process** (default): All teammates run in your main terminal. Use Shift+Down to cycle through teammates and send messages directly.
-- **Split panes**: Each teammate gets their own pane (requires tmux or iTerm2).
-
-To override the default mode:
-
-```json
-// In ~/.claude.json (global config)
-{
-  "teammateMode": "in-process"
-}
-```
-
-Or use the CLI flag:
-
-```bash
-claude --teammate-mode in-process
-```
-
-## Usage Examples
-
-### Basic Team Creation
-
-```
-I'm designing a CLI tool that helps developers track TODO comments across
-their codebase. Create an agent team to explore this from different angles: one
-teammate on UX, one on technical architecture, one playing devil's advocate.
-```
-
-### With Specific Configuration
-
-```
-Create a team with 4 teammates to refactor these modules in parallel.
-Use Sonnet for each teammate.
-```
-
-### Requiring Plan Approval
-
-```
-Spawn an architect teammate to refactor the authentication module.
-Require plan approval before they make any changes.
-```
-
-### Parallel Code Review
-
-```
-Create an agent team to review PR #142. Spawn three reviewers:
-- One focused on security implications
-- One checking performance impact
-- One validating test coverage
-Have them each review and report findings.
-```
-
-## Controlling the Team
-
-- **Direct communication**: Use Shift+Down to cycle to a teammate and type to send messages
-- **Assign tasks**: Tell the lead to assign specific tasks to specific teammates
-- **Close teammates**: `Ask the researcher teammate to shut down`
-- **Clean up**: `Clean up the team` when done (run this through the lead, not teammates)
-
-## Best Practices
-
-1. **Start small**: 3-5 teammates is optimal for most workflows
-2. **Give enough context**: Include specific details in your spawn prompt
-3. **Avoid file conflicts**: Structure work so each teammate owns different files
-4. **Monitor progress**: Check teammate progress and redirect when needed
-5. **Wait for completion**: Tell the lead to "Wait for your teammates to complete their tasks before proceeding"
-
-## Known Limitations
-
-- In-process teammates don't support session recovery (`/resume`, `/rewind`)
-- Task status may lag; manually update if tasks get stuck
-- Each session can only manage one team at a time
-- Teammates cannot spawn their own teams (only the lead can)
-- All teammates inherit the lead's permission mode at spawn time
+- Only the lead can create a team; teammates cannot create nested teams.
+- Each session manages one team at a time.
+- Teammates inherit the lead's permission mode when spawned.
+- In-process teammates do not support `/resume` or `/rewind`.
+- Treat task status as advisory and verify delivered artifacts directly.

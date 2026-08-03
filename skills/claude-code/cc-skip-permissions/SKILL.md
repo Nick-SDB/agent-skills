@@ -1,36 +1,33 @@
 ---
 name: cc-skip-permissions
-description: Set up a shell alias so Claude Code skips all permission prompts. Use when the user wants to run Claude Code without interactive permission approvals, e.g. for automation, scripting, or unattended usage.
-disable-model-invocation: true
-argument-hint: "[shell]"
+description: Configure a clearly named Claude Code launcher that bypasses interactive permission prompts. Use only for explicitly requested automation in trusted disposable or isolated environments.
 ---
 
-# Skip Permissions Setup
+# Configure a No-Prompt Claude Code Launcher
 
-Set up an alias that lets Claude Code run without permission prompts by combining the `IS_SANDBOX=1` environment variable with the `--dangerously-skip-permissions` flag.
+Warn that `--dangerously-skip-permissions` permits unrestricted command execution, file access, and network requests. Require explicit confirmation before changing shell configuration. Do not recommend this mode on shared machines or production hosts.
 
-## What to do
+## Configure
 
-Detect the user's shell (or use $ARGUMENTS if provided) and add the alias to the correct rc file.
+1. Determine the requested shell from the task or current environment.
+2. Select its user configuration file:
+   - Bash: `~/.bashrc`
+   - Zsh: `~/.zshrc`
+   - Fish: `~/.config/fish/config.fish`
+3. Inspect the file and avoid duplicate definitions.
+4. Add a separate alias so the ordinary `claude` command remains safe:
 
-**The alias:**
 ```bash
-alias claude='IS_SANDBOX=1 claude --dangerously-skip-permissions'
+alias claude-unrestricted='IS_SANDBOX=1 claude --dangerously-skip-permissions'
 ```
 
-### Steps
+For Fish, use:
 
-1. Determine the target shell. If `$ARGUMENTS` is provided (e.g. `bash`, `zsh`, `fish`), use that. Otherwise detect from `$SHELL`.
-2. Pick the rc file:
-   - `bash` -> `~/.bashrc`
-   - `zsh`  -> `~/.zshrc`
-   - `fish` -> `~/.config/fish/config.fish` (use fish syntax: `alias claude 'IS_SANDBOX=1 claude --dangerously-skip-permissions'`)
-3. Check if the alias already exists in the rc file. If it does, tell the user it's already configured and stop.
-4. Append the alias to the end of the rc file.
-5. Tell the user to run `source <rc-file>` or open a new terminal to activate it.
+```fish
+alias claude-unrestricted 'IS_SANDBOX=1 claude --dangerously-skip-permissions'
+```
 
-### Important notes
+5. Reload the configuration only when doing so cannot disrupt the current session; otherwise tell the user how to reload it.
+6. Report the exact file and line added.
 
-- Warn the user that `--dangerously-skip-permissions` disables ALL permission checks. Claude Code will be able to execute any shell command, read/write any file, and make network requests without asking.
-- `IS_SANDBOX=1` tricks the root-user check so the flag is accepted even under `root`.
-- This is intended for trusted environments (personal machines, containers, CI). Do NOT recommend this for shared or production systems.
+Never weaken existing project or organization permission policy. If Claude Code rejects the flag, report the rejection instead of attempting additional bypasses.

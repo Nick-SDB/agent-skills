@@ -1,123 +1,45 @@
 ---
 name: fix-locale
-description: Detect and fix UTF-8/locale issues causing Chinese/Japanese characters to display as underscores or question marks. Use when user reports characters not rendering correctly.
-argument-hint: "[locale]"
-allowed-tools: Bash Grep Read Write Edit Glob
+description: Diagnose and fix UTF-8 locale problems that corrupt CJK or other non-ASCII text. Use when characters render as boxes, underscores, question marks, or mojibake.
 ---
 
-# Fix UTF-8 Locale Issues
+# Fix UTF-8 Locale Problems
 
-Detect and fix locale/UTF-8 encoding issues that cause CJK (Chinese, Japanese, Korean) characters to display incorrectly (as underscores, boxes, or question marks).
+Diagnose before modifying configuration. Use the locale requested by the user; otherwise prefer an installed UTF-8 locale appropriate to the system instead of assuming a language.
 
-## Current System State
+## Diagnose
 
-```
-Current locale: !`locale 2>/dev/null || echo "locale command not found"`
-LANG variable: !`echo $LANG`
-TMUX session: !`echo "TMUX=$TMUX"`
-```
+1. Run `locale`, inspect `LANG`, `LC_CTYPE`, and `LC_ALL`, and list installed locales with `locale -a` when available.
+2. Check whether the session runs inside tmux by inspecting `TMUX`.
+3. Inspect the active shell and its user startup files.
+4. Distinguish configuration problems from terminal font or encoding problems.
 
-## Important: Check for tmux
+Treat empty values, `C`, `POSIX`, or a non-UTF-8 locale as likely causes. Check whether locale exports appear after an early return in a shell startup file.
 
-If `TMUX=$TMUX` shows a value (not empty), the session is running inside tmux. **Locale changes made to ~/.bashrc may not apply inside tmux** because tmux spawns a new session that does not source ~/.bashrc.
+## Repair user configuration
 
-If running inside tmux:
-- Tell the user: "You appear to be running inside tmux. Locale changes to ~/.bashrc won't apply inside the current tmux session. Please exit tmux completely, then source ~/.bashrc in a fresh terminal to apply the changes."
-- Do NOT say the fix is working if the user is in tmux - the verification should be done outside tmux.
-
-## Step 1: Check for Locale Problems
-
-1. Run `locale` to see all LC_* variables
-2. Run `echo $LANG` to check LANG setting
-3. If any of these show problems:
-   - Empty LANG
-   - LC_CTYPE="POSIX" or "C"
-   - Missing UTF-8 in the locale string
-
-## Step 2: Detect Common Issues
-
-- **Issue A**: LANG not set or empty
-- **Issue B**: Locale set but not exported in shell config
-- **Issue C**: Locale set after early-return in .bashrc (never executes)
-- **Issue D**: System locale not configured (/etc/default/locale)
-- **Issue E**: Locale not generated on the system
-
-## Step 3: Fix the Issues
-
-### Fix A & B: Set locale in ~/.bashrc
-
-Read the user's `.bashrc` (check $HOME/.bashrc or /root/.bashrc):
+1. Select a locale that appears in `locale -a`.
+2. Preserve existing content and avoid duplicate exports.
+3. Put required exports before any non-interactive early return:
 
 ```bash
-# Find the bashrc
-bashrc_path="$HOME/.bashrc"
-if [ ! -f "$bashrc_path" ]; then
-  bashrc_path="/root/.bashrc"
-fi
+export LANG=<installed-utf8-locale>
+export LC_ALL=<installed-utf8-locale>
 ```
 
-Add these lines **at the very top** (before any `[ -z "$PS1" ] && return` line):
+Set `LANGUAGE` only on systems that support it and only when a language preference is known.
 
-```bash
-# Set locale for UTF-8 support (must be before interactive check)
-export LANG=zh_CN.UTF-8
-export LANGUAGE=zh_CN:zh:en_US:en
-export LC_ALL=zh_CN.UTF-8
-```
+## Repair system configuration when required
 
-If user specified a different locale in $ARGUMENTS, use that instead (e.g., `ja_JP.UTF-8` for Japanese).
+Request authorization before editing system files or generating locales. Use the operating system's supported locale configuration mechanism. On Debian-derived systems this may include `locale-gen`; on RHEL-derived systems it may include `localedef`.
 
-### Fix C: Ensure locale is before early-return
+Do not write a locale that the system has not generated.
 
-The lines MUST appear before:
-```bash
-[ -z "$PS1" ] && return
-```
+## Verify
 
-If they appear after, move them to the top.
+1. Start a fresh shell and rerun `locale`.
+2. Print representative ASCII and non-ASCII text.
+3. If tmux was active, restart the tmux server or verify outside tmux; existing servers retain their original environment.
+4. Report the root cause, files changed, commands run, and any verification that still requires a new terminal session.
 
-### Fix D: Set system locale
-
-Write to `/etc/default/locale`:
-```
-LANG=zh_CN.UTF-8
-LANGUAGE=zh_CN:zh:en_US:en
-LC_ALL=zh_CN.UTF-8
-```
-
-### Fix E: Generate locale if needed
-
-If locale `zh_CN.UTF-8` is not generated, run:
-```bash
-locale-gen zh_CN.UTF-8
-```
-
-Or on RHEL/CentOS:
-```bash
-localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
-```
-
-## Step 4: Verify the Fix
-
-After making changes, run:
-```bash
-source ~/.bashrc
-locale
-echo "中文测试 Chinese test 日本語"
-```
-
-All CJK characters should render correctly.
-
-**Note**: If you are inside tmux, exit tmux first and verify in a fresh terminal outside tmux. The locale changes to ~/.bashrc may not apply to existing tmux sessions.
-
-## Output Summary
-
-Report to the user:
-1. What was wrong (which issues were detected)
-2. What files were modified
-3. Verification results showing characters now render correctly
-
-**Important**: Do NOT confidently say the fix is "working" or "complete". Instead:
-- Say something like "The configuration has been updated. Please verify in a new terminal session."
-- If in tmux, explicitly warn that verification must be done outside tmux
-- Remind the user that they may need to restart their terminal or tmux session for changes to take effect
+Do not claim success solely because a startup file was edited.
