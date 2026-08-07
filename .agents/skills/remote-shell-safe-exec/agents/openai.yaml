@@ -1,0 +1,4 @@
+interface:
+  display_name: "Safe Remote Shell"
+  short_description: "Run SSH and container scripts without quote breakage"
+  default_prompt: "Use $remote-shell-safe-exec to run this remote shell workflow safely without nested quoting errors."

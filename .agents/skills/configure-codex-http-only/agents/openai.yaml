@@ -1,0 +1,4 @@
+interface:
+  display_name: "Configure Codex HTTP Only"
+  short_description: "Configure Codex to avoid WebSocket transport"
+  default_prompt: "Use $configure-codex-http-only to configure this machine for HTTP-only Codex responses."
