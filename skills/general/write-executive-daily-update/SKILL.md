@@ -11,9 +11,11 @@ description: Convert technical work logs, experiment progress, engineering notes
 2. Pair each work item with its result, conclusion, impact, or verified limitation.
 3. Remove routine housekeeping unless it affected delivery, risk, cost, or a decision.
 4. Translate internal codes and implementation terms into plain business-readable language.
-5. Order bullets by importance: completed outcomes, comparative findings, failures or risks,
-   then enabling work.
-6. Return an unordered list by default. Add a heading, date, next steps, or document edit only
+5. Detect repeated comparisons across alternatives, versions, time points, or metrics and put them
+   in a compact Markdown table.
+6. Order remaining bullets by importance: completed outcomes, comparative findings, failures or
+   risks, then enabling work.
+7. Return an unordered list by default. Add a heading, date, next steps, or document edit only
    when requested.
 
 ## Writing Rules
@@ -23,6 +25,11 @@ description: Convert technical work logs, experiment progress, engineering notes
   “工作内容：” or “结论：”.
 - Preserve concrete product names, counts, durations, pass/fail results, and other decision-useful
   evidence.
+- Prefer a Markdown table when comparing two or more items across repeated dimensions such as
+  parameters, samples, latency, quality, progress, or pass/fail status.
+- Keep one comparable item per table row, use consistent units and metric direction, and reserve
+  surrounding bullets for the decision or conclusion that the table supports.
+- Keep a comparison in prose only when it is a single fact that fits clearly in one sentence.
 - Say explicitly when a run produced no valid result; never present partial progress as completion.
 - Prefer 3–7 high-value bullets. Merge related implementation details into the outcome they enable.
 - Use direct, neutral language suitable for a leader who has not followed the implementation.
