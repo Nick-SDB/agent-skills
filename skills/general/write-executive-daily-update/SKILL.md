@@ -1,0 +1,69 @@
+---
+name: write-executive-daily-update
+description: Convert technical work logs, experiment progress, engineering notes, or raw status updates into a concise leadership-ready daily report. Use when the user asks for a 日报、今日进展、领导汇报、管理层摘要、executive update, or wants technical progress rewritten as plain-language unordered bullets with conclusions.
+---
+
+# Write Executive Daily Update
+
+## Workflow
+
+1. Extract only material work completed or meaningfully advanced today.
+2. Pair each work item with its result, conclusion, impact, or verified limitation.
+3. Remove routine housekeeping unless it affected delivery, risk, cost, or a decision.
+4. Translate internal codes and implementation terms into plain business-readable language.
+5. Order bullets by importance: completed outcomes, comparative findings, failures or risks,
+   then enabling work.
+6. Return an unordered list by default. Add a heading, date, next steps, or document edit only
+   when requested.
+
+## Writing Rules
+
+- Write one compact sentence per bullet when practical.
+- Combine action and conclusion naturally with punctuation; do not prefix text with
+  “工作内容：” or “结论：”.
+- Preserve concrete product names, counts, durations, pass/fail results, and other decision-useful
+  evidence.
+- Say explicitly when a run produced no valid result; never present partial progress as completion.
+- Prefer 3–7 high-value bullets. Merge related implementation details into the outcome they enable.
+- Use direct, neutral language suitable for a leader who has not followed the implementation.
+- Do not mention paths, driver names, checkpoint IDs, process IDs, internal commands, or tool names
+  unless they are themselves the finding.
+- Exclude report formatting work, file locations, routine cleanup, available disk space, and similar
+  operational trivia unless they caused or removed a material blocker.
+- Do not invent business impact or certainty beyond the supplied evidence.
+
+## Translate Internal Language
+
+Replace internal shorthand with a short descriptive name on first use:
+
+- `L2` → “跨团队需求变更测试”
+- `L4` → “故障恢复测试”
+- `L5` → “长时间连续运行测试”
+- `L6` → “安全隔离测试”
+- `H48` → “48 Agent 高负载测试”
+- `H128` → “128 Agent 极限压力测试”
+- `checkpoint` → “关键步骤” or the actual completed action
+- “原生通信验证” → “产品能否把变更自动传达给原责任角色”
+
+Keep a code only when the audience already uses it or the user explicitly requests it.
+
+## Quality Check
+
+Before answering, verify:
+
+- Every bullet states both what changed and what it means.
+- A leader can understand every bullet without experiment documentation.
+- The list contains no item whose removal would leave management understanding unchanged.
+- Failures identify the observed limitation without speculative root-cause claims.
+
+## Example
+
+Prefer:
+
+- 完成 Houmao 第二轮跨团队需求变更测试；后端修改、前端同步、追加需求和最终验收
+  均在 485 秒内完成，两轮测试全部通过。
+
+Avoid:
+
+- 工作内容：完成 Houmao L2 run2；结论：4/4 checkpoint PASS。
+- 检查磁盘，当前还有 4.5 TB。

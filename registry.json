@@ -64,6 +64,17 @@
     },
     {
       "category": "general",
+      "name": "houmao-team-harness-designer",
+      "source": "skills/general/houmao-team-harness-designer",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
       "name": "install-openspec",
       "source": "skills/general/install-openspec",
       "targets": [
@@ -110,6 +121,17 @@
       "category": "general",
       "name": "update-skill",
       "source": "skills/general/update-skill",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "write-executive-daily-update",
+      "source": "skills/general/write-executive-daily-update",
       "targets": [
         "claude-code",
         "codex",

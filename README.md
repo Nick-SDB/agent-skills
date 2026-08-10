@@ -1,6 +1,6 @@
 # agent-skills
 
-A portable collection of 11 Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
+A portable collection of 13 Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
 
 ## Repository layout
 
@@ -24,7 +24,7 @@ Portable sources use the common `SKILL.md` format with only `name` and `descript
 | Codex | `.agents/skills` | `~/.agents/skills` | `$<skill-name>` |
 | Kimi Code CLI | `.kimi/skills` | `~/.kimi/skills` | `/skill:<skill-name>` |
 
-The three `cc-*` skills are Claude Code-specific. The eight general skills render for all three targets.
+The three `cc-*` skills are Claude Code-specific. The ten general skills render for all three targets.
 
 ## Validate and render
 

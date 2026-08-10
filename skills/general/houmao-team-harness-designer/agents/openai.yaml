@@ -1,0 +1,4 @@
+interface:
+  display_name: "Houmao Team Harness Designer"
+  short_description: "Design safe, reviewable Houmao multi-agent harnesses"
+  default_prompt: "Use $houmao-team-harness-designer to turn my team requirements into a reviewable harness design."
