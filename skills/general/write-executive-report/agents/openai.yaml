@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Executive Report"
+  short_description: "Create concise, conclusion-focused executive reports"
+  default_prompt: "Use $write-executive-report to turn my material into a concise executive report."

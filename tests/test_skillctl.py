@@ -42,7 +42,7 @@ class SkillCtlRenderTests(unittest.TestCase):
     def test_repository_validates(self) -> None:
         result = run_skillctl("validate")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("validated 13 skills and 3 targets", result.stdout)
+        self.assertIn("validated 14 skills and 3 targets", result.stdout)
 
     def test_render_is_repeatable_and_check_reports_no_diff(self) -> None:
         with tempfile.TemporaryDirectory() as temp_text:
@@ -68,7 +68,7 @@ class SkillCtlRenderTests(unittest.TestCase):
             manifest = json.loads((output / "codex" / "manifest.json").read_text())
             self.assertEqual(manifest["$schema"], "manifest.schema.json")
             self.assertEqual(manifest["target"], "codex")
-            self.assertEqual(len(manifest["skills"]), 10)
+            self.assertEqual(len(manifest["skills"]), 11)
             self.assertFalse((output / "codex" / "skills" / "cc-create-skill").exists())
             rendered = (output / "codex" / "skills" / "project-code-map" / "SKILL.md").read_text()
             self.assertIn("## Codex convention", rendered)
@@ -186,7 +186,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             lock = json.loads((destination / "agent-skills.lock.json").read_text())
             self.assertEqual(lock["mode"], "copy")
             self.assertEqual(lock["target"], "codex")
-            self.assertEqual(len(lock["skills"]), 10)
+            self.assertEqual(len(lock["skills"]), 11)
             self.assertTrue((destination / "better-shit" / "SKILL.md").is_file())
 
             checked_after = run_skillctl("sync", "--target", "codex", "--home", str(home), "--check")
@@ -305,7 +305,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             self.assertEqual(installed.returncode, 0, installed.stderr)
             lock = json.loads((destination / "agent-skills.lock.json").read_text())
             self.assertEqual(lock["mode"], "symlink")
-            self.assertEqual(len(lock["skills"]), 13)
+            self.assertEqual(len(lock["skills"]), 14)
             for name, entry in lock["skills"].items():
                 installed_skill = destination / name
                 self.assertTrue(installed_skill.is_symlink())

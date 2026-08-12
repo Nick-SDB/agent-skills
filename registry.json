@@ -138,6 +138,17 @@
         "kimi"
       ],
       "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "write-executive-report",
+      "source": "skills/general/write-executive-report",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
     }
   ],
   "targets": [
