@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Model Paper Reading"
+  short_description: "Research and write model deep-dive reports"
+  default_prompt: "Use $write-model-paper-reading to research this model and write a concise Chinese deep-dive report for an AI R&D team."

@@ -149,6 +149,17 @@
         "kimi"
       ],
       "version": "1.0.0"
+    },
+    {
+      "category": "general",
+      "name": "write-model-paper-reading",
+      "source": "skills/general/write-model-paper-reading",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
     }
   ],
   "targets": [
