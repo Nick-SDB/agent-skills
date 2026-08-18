@@ -39,6 +39,18 @@ description: Convert technical work logs, experiment progress, engineering notes
   operational trivia unless they caused or removed a material blocker.
 - Do not invent business impact or certainty beyond the supplied evidence.
 
+## Output Format
+
+- Render the report as ordinary Markdown by default. Do not add a code fence when the user wants
+  normal rendered output.
+- When the user wants paste-ready Markdown source that stays unrendered in chat but renders after
+  copying into a `.md` file, wrap the complete report in one fenced code block with `text` as the
+  language label. Tell the user to copy only the content inside the fence.
+- Keep the report title as plain text without a Markdown heading marker when requested.
+- Preserve standard Markdown pipe-table syntax inside the fence.
+- Avoid unnecessary blank lines. Add exactly one blank line after each table before any subsequent
+  content so the copied Markdown parses correctly.
+
 ## Translate Internal Language
 
 Replace internal shorthand with a short descriptive name on first use:
