@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deploy DSH"
+  short_description: "安全部署、升级并验证 DeepSeek Harness 服务"
+  default_prompt: "Use $deploy-dsh to deploy and validate DSH on this remote Linux host."
+policy:
+  allow_implicit_invocation: true

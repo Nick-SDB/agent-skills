@@ -53,6 +53,17 @@
     },
     {
       "category": "general",
+      "name": "deploy-dsh",
+      "source": "skills/general/deploy-dsh",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
       "name": "fix-locale",
       "source": "skills/general/fix-locale",
       "targets": [
