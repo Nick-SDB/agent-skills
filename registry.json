@@ -86,6 +86,17 @@
     },
     {
       "category": "general",
+      "name": "gpu-dead-register-profiling",
+      "source": "skills/general/gpu-dead-register-profiling",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
       "name": "houmao-team-harness-designer",
       "source": "skills/general/houmao-team-harness-designer",
       "targets": [
