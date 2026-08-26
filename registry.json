@@ -52,6 +52,15 @@
       "version": "1.0.0"
     },
     {
+      "category": "codex",
+      "name": "check-codex-quota",
+      "source": "skills/codex/check-codex-quota",
+      "targets": [
+        "codex"
+      ],
+      "version": "1.0.0"
+    },
+    {
       "category": "general",
       "name": "create-instruction-flow-svg",
       "source": "skills/general/create-instruction-flow-svg",

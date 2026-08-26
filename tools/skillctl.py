@@ -230,7 +230,7 @@ def validate_repository() -> dict[str, Any]:
         if source_text in registered_sources:
             errors.append(f"duplicate registry source: {source_text}")
         registered_sources.add(source_text)
-        if entry["category"] not in {"general", "claude-code"}:
+        if entry["category"] not in {"general", "claude-code", "codex"}:
             errors.append(f"{name}: unsupported category {entry['category']!r}")
         if not isinstance(entry["version"], str) or not VERSION_RE.fullmatch(entry["version"]):
             errors.append(f"{name}: invalid version {entry['version']!r}")

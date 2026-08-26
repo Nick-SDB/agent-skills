@@ -42,7 +42,7 @@ class SkillCtlRenderTests(unittest.TestCase):
     def test_repository_validates(self) -> None:
         result = run_skillctl("validate")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("validated 18 skills and 3 targets", result.stdout)
+        self.assertIn("validated 19 skills and 3 targets", result.stdout)
 
     def test_render_is_repeatable_and_check_reports_no_diff(self) -> None:
         with tempfile.TemporaryDirectory() as temp_text:
@@ -68,7 +68,7 @@ class SkillCtlRenderTests(unittest.TestCase):
             manifest = json.loads((output / "codex" / "manifest.json").read_text())
             self.assertEqual(manifest["$schema"], "manifest.schema.json")
             self.assertEqual(manifest["target"], "codex")
-            self.assertEqual(len(manifest["skills"]), 15)
+            self.assertEqual(len(manifest["skills"]), 16)
             self.assertFalse((output / "codex" / "skills" / "cc-create-skill").exists())
             rendered = (output / "codex" / "skills" / "project-code-map" / "SKILL.md").read_text()
             self.assertIn("## Codex convention", rendered)
@@ -186,7 +186,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             lock = json.loads((destination / "agent-skills.lock.json").read_text())
             self.assertEqual(lock["mode"], "copy")
             self.assertEqual(lock["target"], "codex")
-            self.assertEqual(len(lock["skills"]), 15)
+            self.assertEqual(len(lock["skills"]), 16)
             self.assertTrue((destination / "better-shit" / "SKILL.md").is_file())
 
             checked_after = run_skillctl("sync", "--target", "codex", "--home", str(home), "--check")
