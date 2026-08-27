@@ -18,6 +18,16 @@ description: Convert technical work logs, experiment progress, engineering notes
 7. Return an unordered list by default. Add a heading, date, next steps, or document edit only
    when requested.
 
+## Voice（口吻）
+
+- Write from the reporter's own perspective, as if reporting upward to leadership: present the work
+  as the organization's or the team's accomplishment, never as the assistant's, an agent's, or a
+  tool's action.
+- Do not attribute work to the AI or automation（如“agent 执行了”“AI 完成了”“自动化跑了”）。
+  Use an implicit subject, or “团队/我们” when a subject is required.
+- The reader is the leader who has not followed the implementation; the writer is reporting their
+  own team's work, not summarizing a third party's activity.
+
 ## Writing Rules
 
 - Write one compact sentence per bullet when practical.
@@ -33,6 +43,9 @@ description: Convert technical work logs, experiment progress, engineering notes
 - Say explicitly when a run produced no valid result; never present partial progress as completion.
 - Prefer 3–7 high-value bullets. Merge related implementation details into the outcome they enable.
 - Use direct, neutral language suitable for a leader who has not followed the implementation.
+- Use professional, standard terminology; avoid awkward coined names and forced metaphors
+  （蹩脚比喻，如“喂数”“饿着”“打满”“藏不住”）. Prefer established technical terms
+  （操作数供给不足、利用率、隐藏延迟、反压）over colloquial imagery.
 - Do not mention paths, driver names, checkpoint IDs, process IDs, internal commands, or tool names
   unless they are themselves the finding.
 - Exclude report formatting work, file locations, routine cleanup, available disk space, and similar
