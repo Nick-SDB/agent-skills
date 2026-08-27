@@ -61,6 +61,17 @@
       "version": "1.0.0"
     },
     {
+      "category": "codex",
+      "name": "codex-task-routing",
+      "source": "skills/codex/codex-task-routing",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
       "category": "general",
       "name": "create-instruction-flow-svg",
       "source": "skills/general/create-instruction-flow-svg",
@@ -207,17 +218,6 @@
       "category": "general",
       "name": "write-model-paper-reading",
       "source": "skills/general/write-model-paper-reading",
-      "targets": [
-        "claude-code",
-        "codex",
-        "kimi"
-      ],
-      "version": "1.0.0"
-    },
-    {
-      "category": "codex",
-      "name": "codex-task-routing",
-      "source": "skills/codex/codex-task-routing",
       "targets": [
         "claude-code",
         "codex",
