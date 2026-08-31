@@ -161,6 +161,17 @@
     },
     {
       "category": "general",
+      "name": "skill-sync-cloud",
+      "source": "skills/general/skill-sync-cloud",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
       "name": "standardize-user-output",
       "source": "skills/general/standardize-user-output",
       "targets": [
