@@ -161,6 +161,17 @@
     },
     {
       "category": "general",
+      "name": "record-progress",
+      "source": "skills/general/record-progress",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
       "name": "standardize-user-output",
       "source": "skills/general/standardize-user-output",
       "targets": [
