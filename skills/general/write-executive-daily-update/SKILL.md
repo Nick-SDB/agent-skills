@@ -46,6 +46,10 @@ description: Convert technical work logs, experiment progress, engineering notes
 - Use professional, standard terminology; avoid awkward coined names and forced metaphors
   （蹩脚比喻，如“喂数”“饿着”“打满”“藏不住”）. Prefer established technical terms
   （操作数供给不足、利用率、隐藏延迟、反压）over colloquial imagery.
+- Write GPU and hardware terms (MMA, TMA, tensor core, TMEM, tcgen05, warp specialization,
+  softmax) in their authoritative form; do not translate them into descriptive Chinese phrases.
+- Append each metric's change ratio in parentheses right after the value, for example
+  18.84 ms（−41%）or 25%（2×）.
 - Do not mention paths, driver names, checkpoint IDs, process IDs, internal commands, or tool names
   unless they are themselves the finding.
 - Exclude report formatting work, file locations, routine cleanup, available disk space, and similar
@@ -87,6 +91,7 @@ Before answering, verify:
 - A leader can understand every bullet without experiment documentation.
 - The list contains no item whose removal would leave management understanding unchanged.
 - Failures identify the observed limitation without speculative root-cause claims.
+- GPU and hardware terms use their authoritative form; each changed value carries its ratio in parentheses.
 
 ## Example
 
