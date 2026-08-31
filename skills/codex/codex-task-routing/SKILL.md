@@ -1,11 +1,11 @@
 ---
 name: codex-task-routing
-description: Split a multi-part task and route subtasks by their nature — delegate coding-heavy / implementation / kernel / GPU / benchmark work to a one-shot codex subagent, keep documentation / timeliness / big-picture aggregation on the main contextful agent, and enforce a review gate before any subagent commits to a technically risky route. Use when splitting tasks, deciding who (codex vs main agent vs context-inheriting subagent) should do each part, or when a subagent must not drift down a wrong technical path.
+description: Split a multi-part task and route subtasks by their nature — delegate coding-heavy / implementation / kernel / GPU / benchmark work to a one-shot codex subagent via the `subagent_codex` tool, keep documentation / timeliness / big-picture aggregation on the main contextful agent, and enforce a review gate before any subagent commits to a technically risky route. Use when splitting tasks, deciding who (codex vs main agent vs context-inheriting subagent) should do each part, or when a subagent must not drift down a wrong technical path.
 ---
 
 # Codex Task Routing
 
-按任务的**性质**拆分并路由到正确的执行者：重编码类工作交给 codex 子代理，文档/时效性/大局观由主代理持有，并让任何子代理在走错技术路线之前被评审闸门拦住。
+按任务的**性质**拆分并路由到正确的执行者：重编码类工作通过 **`subagent_codex` 工具**提交给 codex 子代理（**禁止**用裸 `codex exec` 命令行），文档/时效性/大局观由主代理持有，并让任何子代理在走错技术路线之前被评审闸门拦住。
 
 ## 何时使用
 
@@ -22,6 +22,12 @@ description: Split a multi-part task and route subtasks by their nature — dele
 | **继承上下文的有限分析** | 需要既有结论，但无重代码 | 上下文继承子代理 | `subagent_fork` |
 
 关键区分：codex 是**一次性**（每次调用拿到全新上下文），所以它不擅长时效性与大局观——每次都要重新喂入全部上下文，且会偏离既有结论。主代理持有完整会话记忆，因此负责一切必须保持最新、全局一致的部分。
+
+## 工具使用（唯一合法的 codex 调用通道）
+
+- 与 codex 子代理交互**只允许**用 **`subagent_codex` 工具**，把重编码活当作一个自包含、一次性的子代理任务提交。
+- **禁止**直接跑裸 `codex exec`（或 `codex e`）命令行来顶替子代理。原因：在 DSH 环境下裸 `codex exec` 走的是宿主 shell 沙箱，常因 codex 需要写 `~/.codex/tmp/arg0/` 等目录而触发 `Permission denied (os error 13)`，或需要逐条手动传递代理/认证环境；而 `subagent_codex` 由 DSH 正确管理 app-server 协议、权限上下文与代理路由，是稳定唯一可用的通道。
+- 涉及 CLI 特有的查询（如配额 `check-codex-quota`）同样不要用 `codex exec` 子代理去跑；应由主代理在宿主 shell 直接执行官方 API 查询。
 
 ## 第 1 步 — 拆分任务
 
@@ -54,6 +60,7 @@ description: Split a multi-part task and route subtasks by their nature — dele
 
 | 反模式 | 后果 | 修正 |
 |---|---|---|
+| 用裸 `codex exec` 命令行顶替子代理 | 沙箱权限报错、环境不完整、偏离统一调用通道 | 统一走 `subagent_codex` 工具 |
 | 把重活交给 fork/普通子代理 | 能力不匹配、路线错误 | 重活只给 codex |
 | 让 codex 写必须保持最新/全局一致的文档 | 偏离既有结论 | 文档/总结 → 主代理 |
 | 主代理手写重代码 | 消耗主线程、丢失大局观 | 主代理只规划/监督/汇总 |
