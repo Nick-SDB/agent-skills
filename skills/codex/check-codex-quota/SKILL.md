@@ -49,6 +49,7 @@ python3 scripts/check_codex_quota.py
 跑通后应输出类似：
 ```
 Codex 周额度汇报
+  邮箱        : user@example.com
   套餐        : pro
   周窗口已用  : 24%
   周窗口剩余  : 76%

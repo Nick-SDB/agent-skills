@@ -12,6 +12,7 @@ proxy must be kept. Run this on the host shell, not inside the codex sandbox
 Exit codes: 0 on success, 1 on failure (curl error, non-JSON body, missing auth).
 """
 
+import base64
 import datetime
 import json
 import os
@@ -19,6 +20,26 @@ import subprocess
 import sys
 
 USAGE_URL = "https://chatgpt.com/backend-api/wham/usage"
+
+
+def _b64url_decode(segment: str) -> bytes:
+    segment = segment + "=" * (-len(segment) % 4)
+    return base64.urlsafe_b64decode(segment)
+
+
+def _extract_email(data: dict) -> str:
+    """Best-effort email from auth.json: top-level, else decode the id_token JWT."""
+    if data.get("email"):
+        return str(data["email"])
+    tokens = data.get("tokens", {}) or {}
+    id_token = tokens.get("id_token") or ""
+    try:
+        payload = json.loads(_b64url_decode(id_token.split(".")[1]))
+        if payload.get("email"):
+            return str(payload["email"])
+    except (IndexError, ValueError, json.JSONDecodeError):
+        pass
+    return "未知"
 
 
 def main() -> int:
@@ -70,6 +91,7 @@ def main() -> int:
     days = round(int(reset_s) / 86400, 1) if reset_s else None
 
     print("Codex 周额度汇报")
+    print("  邮箱        :", _extract_email(data))
     print("  套餐        :", payload.get("plan_type"))
     print(f"  周窗口已用  : {used}%")
     if remaining is not None:
