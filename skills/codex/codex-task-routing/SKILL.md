@@ -27,7 +27,7 @@ description: Split a multi-part task and route subtasks by their nature — dele
 
 - 与 codex 子代理交互**只允许**用 **`subagent_codex` 工具**，把重编码活当作一个自包含、一次性的子代理任务提交。
 - **禁止**直接跑裸 `codex exec`（或 `codex e`）命令行来顶替子代理。原因：在 DSH 环境下裸 `codex exec` 走的是宿主 shell 沙箱，常因 codex 需要写 `~/.codex/tmp/arg0/` 等目录而触发 `Permission denied (os error 13)`，或需要逐条手动传递代理/认证环境；而 `subagent_codex` 由 DSH 正确管理 app-server 协议、权限上下文与代理路由，是稳定唯一可用的通道。
-- 涉及 CLI 特有的查询（如配额 `check-codex-quota`）同样不要用 `codex exec` 子代理去跑；应由主代理在宿主 shell 直接执行官方 API 查询。
+- 涉及 CLI 特有的查询（如配额 `codex-check-quota`）同样不要用 `codex exec` 子代理去跑；应由主代理在宿主 shell 直接执行官方 API 查询。
 
 ## 第 1 步 — 拆分任务
 

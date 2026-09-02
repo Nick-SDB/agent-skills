@@ -1,5 +1,5 @@
 ---
-name: check-codex-quota
+name: codex-check-quota
 description: 查询 Codex 账号当前剩余的每周使用额度（weekly usage quota / limit）。通过官方 wham/usage API 读取已存储的认证 token 与账号 id，返回套餐、周窗口已用/剩余百分比与重置时间。Use when the user asks about codex 额度、配额、用量、剩余额度、周额度、quota、usage、limit，或想知道本周 Codex 还能用多少。
 ---
 

@@ -53,8 +53,8 @@
     },
     {
       "category": "codex",
-      "name": "check-codex-quota",
-      "source": "skills/codex/check-codex-quota",
+      "name": "codex-check-quota",
+      "source": "skills/codex/codex-check-quota",
       "targets": [
         "codex"
       ],
