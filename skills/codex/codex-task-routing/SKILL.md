@@ -29,6 +29,16 @@ description: Split a multi-part task and route subtasks by their nature — dele
 - **禁止**直接跑裸 `codex exec`（或 `codex e`）命令行来顶替子代理。原因：在 DSH 环境下裸 `codex exec` 走的是宿主 shell 沙箱，常因 codex 需要写 `~/.codex/tmp/arg0/` 等目录而触发 `Permission denied (os error 13)`，或需要逐条手动传递代理/认证环境；而 `subagent_codex` 由 DSH 正确管理 app-server 协议、权限上下文与代理路由，是稳定唯一可用的通道。
 - 涉及 CLI 特有的查询（如配额 `codex-check-quota`）同样不要用 `codex exec` 子代理去跑；应由主代理在宿主 shell 直接执行官方 API 查询。
 
+## 第 0 步 — 拆解长程任务为任务清单
+
+复杂或长程任务（多步、跨多轮、需等子代理完成后再继续、含多次验证）在路由之前，先拆解成**可依次执行的任务清单**：
+
+1. 把目标拆成若干有依赖顺序的步骤（等 codex 完成 → 审阅交付 → 补跑缺失验证 → 确认达标 → 落盘 → 汇报），用任务清单记录，每步标记 `pending` / `in_progress` / `completed`。
+2. 若任务需跨多个自主回合自动续跑（例如 codex 长跑期间主会话可能中断），同时建立一个长程目标跟踪，让进度在回合间持久化。
+3. 按清单**依次**安排 codex 执行，每完成一步立即更新清单状态，而不是一次性全量下发、或让多个 codex 无依赖地并行跑同一条链。
+
+清单的价值是让「谁在前、谁在后、哪些还没做」对下一个无上下文的新 agent 一目了然，即使当前进程挂掉也能照着续做。
+
 ## 第 1 步 — 拆分任务
 
 问三个问题，给每个部分打标签：
