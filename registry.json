@@ -62,8 +62,8 @@
     },
     {
       "category": "codex",
-      "name": "codex-manual-route",
-      "source": "skills/codex/codex-manual-route",
+      "name": "codex-route",
+      "source": "skills/codex/codex-route",
       "targets": [
         "claude-code",
         "codex",

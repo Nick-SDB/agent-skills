@@ -1,9 +1,9 @@
 ---
-name: codex-manual-route
-description: User-explicit manual switch that routes the whole current task to codex. Load it ONLY when the user explicitly names this skill (for example "/codex-manual-route") or explicitly says the task must be handed to codex in this session — never auto-load it because a task merely looks like coding, analysis, or evaluation work, and never load it on the agent's own initiative. Once triggered, assemble one self-contained prompt and run the task through codex; if codex fails, stop that subtask and report to the user instead of doing the work yourself. Use when the user wants to force codex execution for a specific task.
+name: codex-route
+description: User-explicit manual switch that routes the whole current task to codex. Load it ONLY when the user explicitly names this skill (for example "/codex-route") or explicitly says the task must be handed to codex in this session — never auto-load it because a task merely looks like coding, analysis, or evaluation work, and never load it on the agent's own initiative. Once triggered, assemble one self-contained prompt and run the task through codex; if codex fails, stop that subtask and report to the user instead of doing the work yourself. Use when the user wants to force codex execution for a specific task.
 ---
 
-# Codex Manual Route
+# Codex Route
 
 **仅手动触发**：本 skill 只能由用户**显式点名**加载。agent 不得因为任务看起来像编码、分析、评估而自行加载它；觉得合适时只能**建议**用户触发，不得代替用户触发。
 
@@ -11,7 +11,7 @@ description: User-explicit manual switch that routes the whole current task to c
 
 在最近一条用户消息中寻找**显式点名**，只有这两种算数：
 
-1. 直接写出本 skill 的名字（`codex-manual-route` / `/codex-manual-route`）；或
+1. 直接写出本 skill 的名字（`codex-route` / `/codex-route`）；或
 2. 明确要求把当前任务交给 codex 执行（例如「这个任务用 codex 跑」「交给 codex 做」）。
 
 找不到显式点名 → **立即停止**：说明本 skill 需要用户显式触发，不要执行任何路由，也不要按本 skill 的后续步骤行事。
