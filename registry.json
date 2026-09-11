@@ -106,6 +106,17 @@
     },
     {
       "category": "general",
+      "name": "first-principles",
+      "source": "skills/general/first-principles",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "general",
       "name": "fix-locale",
       "source": "skills/general/fix-locale",
       "targets": [
