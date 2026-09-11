@@ -62,6 +62,17 @@
     },
     {
       "category": "codex",
+      "name": "codex-manual-route",
+      "source": "skills/codex/codex-manual-route",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "category": "codex",
       "name": "codex-task-routing",
       "source": "skills/codex/codex-task-routing",
       "targets": [
