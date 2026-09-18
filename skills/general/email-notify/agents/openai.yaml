@@ -1,0 +1,4 @@
+interface:
+  display_name: "邮件通知"
+  short_description: "通过 SMTP 向自己发送任务通知，支持首次预览、安全凭据存储、去重与计数"
+  default_prompt: "使用 $email-notify 配置并启用当前任务的邮件通知。"

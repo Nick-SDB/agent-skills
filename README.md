@@ -1,6 +1,6 @@
 # agent-skills
 
-A portable collection of 24 Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
+A portable collection of 26 Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
 
 ## Repository layout
 
@@ -24,7 +24,9 @@ Portable sources use the common `SKILL.md` format with only `name` and `descript
 | Codex | `.agents/skills` | `~/.agents/skills` | `$<skill-name>` |
 | Kimi Code CLI | `.kimi/skills` | `~/.kimi/skills` | `/skill:<skill-name>` |
 
-The three `cc-*` skills are Claude Code-specific. The eighteen general skills render for all three targets.
+The three `cc-*` skills are Claude Code-specific. All other skills render for their declared targets in `registry.json`.
+
+The `email-notify` skill sends SMTP task notifications to the user's own mailbox with OS credential storage, preview-before-enable setup, deduplication, and counters. Its helper requires Python 3.10+; Windows uses the standard library, while macOS/Linux OS credential storage uses the optional `keyring` package.
 
 ## Validate and render
 
