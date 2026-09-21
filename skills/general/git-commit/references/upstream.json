@@ -1,0 +1,32 @@
+{
+  "format_version": 1,
+  "repository": "https://github.com/github/awesome-copilot",
+  "requested_ref": "4f4796f0bf30e105700f97ed8408c12b6aa95e06",
+  "commit": "4f4796f0bf30e105700f97ed8408c12b6aa95e06",
+  "skill_path": "skills/git-commit",
+  "upstream_version": null,
+  "license": {
+    "id": "MIT",
+    "local_path": "references/LICENSE"
+  },
+  "files": [
+    {
+      "upstream_path": "skills/git-commit/SKILL.md",
+      "local_path": "SKILL.md",
+      "sha256": "554d1a3c6d95f15bc1170160659ecdc9a9958b64f377f3988941b672c249b13f"
+    },
+    {
+      "upstream_path": "LICENSE",
+      "local_path": "references/LICENSE",
+      "sha256": "e32449d23085399adc1222f7a17408b730550258e51627c153cb108ca9955823"
+    }
+  ],
+  "local_files": {
+    "SKILL.md": "ee0de40a73075d9c0f1397d9db36957d980457373095e2028c70529097792804",
+    "references/LICENSE": "e32449d23085399adc1222f7a17408b730550258e51627c153cb108ca9955823"
+  },
+  "adaptations": [
+    "Retained only name and description in portable frontmatter; preserved the upstream body and added attribution links.",
+    "Copied the selected upstream license unchanged. No hooks or upstream code were executed during import."
+  ]
+}

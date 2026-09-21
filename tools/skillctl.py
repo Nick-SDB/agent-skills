@@ -14,6 +14,8 @@ import tempfile
 from pathlib import Path
 from typing import Any, Iterable
 
+import skill_sources
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "registry.json"
@@ -213,9 +215,11 @@ def validate_repository() -> dict[str, Any]:
             errors.append("registry skill entries must be objects")
             continue
         expected = {"category", "name", "source", "targets", "version"}
-        if set(entry) != expected:
+        if set(entry) - {"origin"} != expected:
             errors.append(f"registry skill entry fields must be {sorted(expected)}: {entry!r}")
             continue
+        if entry.get("origin", "local") not in {"local", "external"}:
+            errors.append("registry origin must be local or external")
         name = entry["name"]
         source_text = entry["source"]
         if not isinstance(name, str) or not NAME_RE.fullmatch(name):
@@ -301,6 +305,8 @@ def validate_repository() -> dict[str, Any]:
         errors.append(f"unregistered skill source: {source}")
     for source in sorted(registered_sources - discovered):
         errors.append(f"registry source is not a discovered skill: {source}")
+
+    errors.extend(skill_sources.validate(ROOT, registry))
 
     schema_paths = [
         ROOT / "schemas/registry.schema.json",
@@ -785,6 +791,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("validate", help="validate registry, adapters, skills, and resources")
 
+    import_parser = subparsers.add_parser("import", help="import a pinned GitHub skill with provenance")
+    import_parser.add_argument("--repo", required=True)
+    import_parser.add_argument("--path", required=True, help="skill directory within upstream repository")
+    import_parser.add_argument("--ref", required=True, help="tag, branch, or full commit; resolved to a fixed SHA")
+    import_parser.add_argument("--license-path", required=True, help="reviewed upstream license file")
+    import_parser.add_argument("--license-id", help="reviewed license identifier if not in upstream frontmatter")
+    import_parser.add_argument("--category", choices=("general", "codex", "claude-code"), default="general")
+    import_parser.add_argument("--targets", nargs="+", choices=("claude-code", "codex", "kimi"),
+                               default=["claude-code", "codex", "kimi"])
+    provenance_parser = subparsers.add_parser("provenance", help="generate or check external-source citations")
+    provenance_parser.add_argument("--check", action="store_true")
+    provenance_parser.add_argument("--refresh", metavar="NAME", help="record reviewed local file changes")
+    provenance_parser.add_argument("--note", help="required adaptation note when refreshing checksums")
+
     render_parser = subparsers.add_parser("render", help="render target-specific distributions")
     render_parser.add_argument("--target", default="all", help="target id or 'all'")
     render_parser.add_argument("--output", type=Path, default=ROOT / "dist")
@@ -806,9 +826,14 @@ def main(argv: list[str] | None = None) -> int:
             if args.dry_run and args.check:
                 raise SkillCtlError("--dry-run and --check cannot be used together")
             sync_install(args)
+        elif args.command == "import":
+            registry = validate_repository()
+            skill_sources.import_skill(ROOT, registry, args, validate_repository)
+        elif args.command == "provenance":
+            skill_sources.provenance(ROOT, load_registry(), args)
         else:
             raise SkillCtlError(f"unsupported command: {args.command}")
-    except SkillCtlError as exc:
+    except (SkillCtlError, skill_sources.SourceError, OSError, UnicodeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     return 0

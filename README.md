@@ -68,6 +68,16 @@ python3 tools/skillctl.py install --target codex --mode symlink --render-root /p
 
 Use a dedicated render root per independently managed checkout. `--home`, `--project-root`, `--destination`, and `--render-root` make every path explicit and support isolated automation. Omitting `--mode` during later syncs preserves the mode recorded in the lockfile.
 
+## External skill attribution
+
+The [git-commit skill](skills/general/git-commit/SKILL.md) is imported from [github/awesome-copilot](https://github.com/github/awesome-copilot) at commit `4f4796f0bf30e105700f97ed8408c12b6aa95e06`. Its MIT license and local provenance hashes are retained in `skills/general/git-commit/references/`.
+
+<!-- skillctl:external-sources:start -->
+| Skill | Upstream | Upstream version | Commit | Local version | License |
+|---|---|---|---|---|---|
+| [git-commit](skills/general/git-commit/SKILL.md) | [github/awesome-copilot](https://github.com/github/awesome-copilot) | Not declared | [4f4796f0bf30](https://github.com/github/awesome-copilot/tree/4f4796f0bf30e105700f97ed8408c12b6aa95e06) | 1.0.0 | MIT |
+<!-- skillctl:external-sources:end -->
+
 ## Add or update a skill
 
 1. Keep the folder name and frontmatter `name` identical and lowercase-hyphenated.

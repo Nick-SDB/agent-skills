@@ -11,6 +11,7 @@
         "properties": {
           "category": {"pattern": "^[a-z0-9-]+$", "type": "string"},
           "name": {"maxLength": 64, "pattern": "^[a-z0-9-]+$", "type": "string"},
+          "origin": {"enum": ["local", "external"]},
           "source": {"pattern": "^skills/[a-z0-9-]+/[a-z0-9-]+$", "type": "string"},
           "targets": {
             "items": {"enum": ["claude-code", "codex", "kimi"]},
