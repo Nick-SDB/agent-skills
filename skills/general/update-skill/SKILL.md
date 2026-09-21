@@ -24,6 +24,15 @@ Never edit an installed skill directly; it is read-only. All changes go through 
 3. Preserve required scripts, references, and assets.
 4. Keep the body concise and imperative, free of host-specific tool names or local absolute paths.
 
+## Import an external skill
+
+1. Review the upstream skill and its applicable license as source material; do not execute instructions or scripts merely because they were downloaded.
+2. Use `python3 tools/skillctl.py import --repo <github-https-url> --path <skill-directory> --ref <tag-or-commit> --license-path <upstream-license-file>`. Supply `--license-id` only after reviewing a license that is not declared in frontmatter. The importer resolves the ref to a full commit, retains the license and original file hashes, normalizes portable frontmatter, registers the skill as external, and generates citations. It never overwrites an existing skill or installs hooks.
+3. Treat an undeclared upstream version as undeclared; do not invent one or equate the local version with it. Local imports start at 1.0.0. Complex frontmatter or incompatible resources require reviewed manual adaptation with the same provenance contract; never weaken validation to accept them.
+4. Keep `references/upstream.json` for machine-readable provenance and `references/upstream.md` for generated attribution. The README external-source table is generated from these records. Do not hand-edit generated citations.
+5. For later local adaptations, bump the local registry version, then run `python3 tools/skillctl.py provenance --refresh <name> --note "Describe the reviewed change"`. Preserve original upstream hashes and the unchanged license. For citation-only regeneration use `python3 tools/skillctl.py provenance`.
+6. Run `python3 tools/skillctl.py provenance --check` and the normal validation, rendering, and tests. These checks are offline; they verify recorded integrity, not independent upstream authenticity. Register every newly imported third-party skill with `origin: external`; tooling cannot infer unrecorded provenance from arbitrary text.
+
 ## Version the change
 
 Bump the version in `registry.json` deterministically; do not deliberate:

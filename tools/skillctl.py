@@ -234,7 +234,7 @@ def validate_repository() -> dict[str, Any]:
         if source_text in registered_sources:
             errors.append(f"duplicate registry source: {source_text}")
         registered_sources.add(source_text)
-        if entry["category"] not in {"general", "claude-code", "codex"}:
+        if entry["category"] not in {"general", "claude-code", "codex", "dsh"}:
             errors.append(f"{name}: unsupported category {entry['category']!r}")
         if not isinstance(entry["version"], str) or not VERSION_RE.fullmatch(entry["version"]):
             errors.append(f"{name}: invalid version {entry['version']!r}")
@@ -797,7 +797,7 @@ def build_parser() -> argparse.ArgumentParser:
     import_parser.add_argument("--ref", required=True, help="tag, branch, or full commit; resolved to a fixed SHA")
     import_parser.add_argument("--license-path", required=True, help="reviewed upstream license file")
     import_parser.add_argument("--license-id", help="reviewed license identifier if not in upstream frontmatter")
-    import_parser.add_argument("--category", choices=("general", "codex", "claude-code"), default="general")
+    import_parser.add_argument("--category", choices=("general", "codex", "claude-code", "dsh"), default="general")
     import_parser.add_argument("--targets", nargs="+", choices=("claude-code", "codex", "kimi"),
                                default=["claude-code", "codex", "kimi"])
     provenance_parser = subparsers.add_parser("provenance", help="generate or check external-source citations")

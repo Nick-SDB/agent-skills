@@ -1,0 +1,50 @@
+{
+  "format_version": 1,
+  "repository": "https://github.com/OthmanAdi/planning-with-files",
+  "requested_ref": "2fbbd77ba9a74cddb9504285935ef9ae0837cdec",
+  "commit": "2fbbd77ba9a74cddb9504285935ef9ae0837cdec",
+  "skill_path": ".agents/skills/planning-with-files",
+  "upstream_version": "3.20.0",
+  "license": {
+    "id": "MIT",
+    "local_path": "references/LICENSE"
+  },
+  "files": [
+    {
+      "upstream_path": "LICENSE",
+      "local_path": "references/LICENSE",
+      "sha256": "4f2e5ecfaa4e0833621cfe54c0bdc2f60f086c0925540d7bdc713517eafb3c84"
+    },
+    {
+      "upstream_path": ".agents/skills/planning-with-files/templates/task_plan.md",
+      "local_path": "assets/templates/task_plan.md",
+      "sha256": "3c4b61444270f689c3dab81b7113467fb87e9705175aea9c3a3b970bd4e777a3"
+    },
+    {
+      "upstream_path": ".agents/skills/planning-with-files/templates/findings.md",
+      "local_path": "assets/templates/findings.md",
+      "sha256": "bb9237ccbf08148d7f7f23ad58fbc9bd7c879c6d0cbca1d533b5b5f21c26c529"
+    },
+    {
+      "upstream_path": ".agents/skills/planning-with-files/templates/progress.md",
+      "local_path": "assets/templates/progress.md",
+      "sha256": "28fc357000ed2b18910c4e436f0f2e02f4abf0acd29cce370a2670640974f31c"
+    }
+  ],
+  "local_files": {
+    "SKILL.md": "0a366bae5776c481e985e7cba123e1242b9a518efa33d3078e63458eb48b6603",
+    "assets/templates/findings.md": "bb9237ccbf08148d7f7f23ad58fbc9bd7c879c6d0cbca1d533b5b5f21c26c529",
+    "assets/templates/progress.md": "28fc357000ed2b18910c4e436f0f2e02f4abf0acd29cce370a2670640974f31c",
+    "assets/templates/task_plan.md": "3c4b61444270f689c3dab81b7113467fb87e9705175aea9c3a3b970bd4e777a3",
+    "references/LICENSE": "4f2e5ecfaa4e0833621cfe54c0bdc2f60f086c0925540d7bdc713517eafb3c84",
+    "scripts/planning.py": "ea7526472080a387e22e380c439333b61950029e911901e763e59745f0e70ec0"
+  },
+  "adaptations": [
+    "Adapted the three-file workflow into concise portable instructions with only name and description in frontmatter.",
+    "Copied three upstream templates unchanged into assets/templates and retained the MIT license unchanged.",
+    "Replaced upstream shell scripts with a locally maintained Python helper for init, list, resolve, and check; this is not an upstream CLI replacement.",
+    "Excluded lifecycle hooks, plugin commands, transcript recovery, attestation, autonomous continuation, and host settings changes.",
+    "Kept task-specific plans separate from project milestones; required explicit selection for multiple plans without a shared active pointer.",
+    "Migrated the initial hand-maintained provenance to the unified external-source metadata and generated citations."
+  ]
+}

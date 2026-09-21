@@ -1,6 +1,6 @@
 # agent-skills
 
-A portable collection of 26 Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
+A portable collection of Agent Skills with deterministic distributions for Codex, Claude Code, and Kimi Code CLI.
 
 ## Repository layout
 
@@ -24,9 +24,58 @@ Portable sources use the common `SKILL.md` format with only `name` and `descript
 | Codex | `.agents/skills` | `~/.agents/skills` | `$<skill-name>` |
 | Kimi Code CLI | `.kimi/skills` | `~/.kimi/skills` | `/skill:<skill-name>` |
 
-The three `cc-*` skills are Claude Code-specific. All other skills render for their declared targets in `registry.json`.
+The three `cc-*` skills are Claude Code-specific, and `codex-check-quota` is Codex-specific. Other registered skills declare their supported targets in `registry.json`.
 
-The `email-notify` skill sends SMTP task notifications to the user's own mailbox with OS credential storage, preview-before-enable setup, deduplication, and counters. Its helper requires Python 3.10+; Windows uses the standard library, while macOS/Linux OS credential storage uses the optional `keyring` package.
+## Upstream attribution: planning-with-files
+
+The [planning-with-files skill](skills/general/planning-with-files/SKILL.md) is a portable adaptation of the upstream project listed below. Its [generated attribution](skills/general/planning-with-files/references/upstream.md) records licensing, pinned revision, and local adaptations.
+
+It maintains `task_plan.md`, `findings.md`, and `progress.md` in a named `.planning/<plan-id>/` task directory. Templates are copied unchanged from upstream; the portable instructions and Python helper are maintained here. Task records complement the project's existing milestone or handoff document, which remains managed through its own conventions and `record-progress`.
+
+After installing through `skillctl`, invoke `$planning-with-files` in Codex, `/planning-with-files` in Claude Code, or `/skill:planning-with-files` in Kimi. For example: "Use planning-with-files for this optimization task; record acceptance criteria, experiment results, and the next action in a separate task directory."
+
+The helper requires Python 3.8+ and supports `init`, `list`, `resolve`, and `check`. From the project root, use the installed skill directory:
+
+```bash
+PWF_SKILL_DIR="$HOME/.agents/skills/planning-with-files"
+python3 "$PWF_SKILL_DIR/scripts/planning.py" init "Optimization experiment"
+python3 "$PWF_SKILL_DIR/scripts/planning.py" list
+python3 "$PWF_SKILL_DIR/scripts/planning.py" resolve --plan-id <printed-plan-id>
+python3 "$PWF_SKILL_DIR/scripts/planning.py" check --plan-id <printed-plan-id>
+```
+
+Use the printed ID for subsequent calls; multiple named plans require explicit selection. Initialization creates a new directory without overwriting previous plans. Resume by resolving and reading the three existing files. `check` verifies recorded phase status, not implementation correctness.
+
+**No hooks are installed.** This integration does not alter host configuration, inject context automatically, read session histories, or enable autonomous continuation. Upstream lifecycle hooks and plugin commands require a separate integration and are not included in this distribution.
+
+## External skill imports and attribution
+
+Use the importer for third-party skills; it records the source before the skill enters the normal validation and distribution pipeline:
+
+```bash
+python3 tools/skillctl.py import \
+  --repo https://github.com/github/awesome-copilot \
+  --path skills/git-commit --ref <tag-or-commit> --license-path LICENSE
+python3 tools/skillctl.py provenance --check
+```
+
+The importer currently supports GitHub HTTPS repositories and single-line `name` and `description` frontmatter. Review the skill and applicable license first. Supply `--license-id` when the skill does not declare one. It downloads the skill subtree and selected license at a fixed full commit SHA, checks downloaded Git blob hashes, preserves upstream SHA-256 hashes, and registers `origin: external`. It retains only portable frontmatter and adds attribution links; it does not execute downloaded code, install hooks, commit, push, or install locally. Incompatible imports fail validation and roll back the new skill, registry, and README changes. Existing skills are never overwritten.
+
+Each external skill contains `references/upstream.json`, generated `references/upstream.md`, and a retained license. Upstream versions and local registry versions are independent; absent upstream versions are recorded as **Not declared**. The metadata stores both original upstream hashes and reviewed local file hashes. After adapting a skill, bump its local version and run:
+
+```bash
+python3 tools/skillctl.py provenance --refresh <skill-name> --note "Describe the reviewed adaptation"
+python3 tools/skillctl.py validate
+```
+
+`provenance` without flags regenerates attribution documents and the table below; `--check` is read-only. Normal `validate` also rejects missing external metadata, invalid commit IDs, changed licenses, unrecorded local changes, and stale generated citations. Validation is offline and cannot identify unmarked third-party code: always declare new external skills with `origin: external`. Existing manually maintained skills are not automatically assigned an inferred origin. To update upstream itself, review the new revision and original hashes explicitly; this first importer supports new skills, not automatic upstream replacement.
+
+<!-- skillctl:external-sources:start -->
+| Skill | Upstream | Upstream version | Commit | Local version | License |
+|---|---|---|---|---|---|
+| [git-commit](skills/general/git-commit/SKILL.md) | [github/awesome-copilot](https://github.com/github/awesome-copilot) | Not declared | [4f4796f0bf30](https://github.com/github/awesome-copilot/tree/4f4796f0bf30e105700f97ed8408c12b6aa95e06) | 1.0.0 | MIT |
+| [planning-with-files](skills/general/planning-with-files/SKILL.md) | [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) | 3.20.0 | [2fbbd77ba9a7](https://github.com/OthmanAdi/planning-with-files/tree/2fbbd77ba9a74cddb9504285935ef9ae0837cdec) | 1.1.0 | MIT |
+<!-- skillctl:external-sources:end -->
 
 ## Validate and render
 
@@ -67,16 +116,6 @@ python3 tools/skillctl.py install --target codex --mode symlink --render-root /p
 ```
 
 Use a dedicated render root per independently managed checkout. `--home`, `--project-root`, `--destination`, and `--render-root` make every path explicit and support isolated automation. Omitting `--mode` during later syncs preserves the mode recorded in the lockfile.
-
-## External skill attribution
-
-The [git-commit skill](skills/general/git-commit/SKILL.md) is imported from [github/awesome-copilot](https://github.com/github/awesome-copilot) at commit `4f4796f0bf30e105700f97ed8408c12b6aa95e06`. Its MIT license and local provenance hashes are retained in `skills/general/git-commit/references/`.
-
-<!-- skillctl:external-sources:start -->
-| Skill | Upstream | Upstream version | Commit | Local version | License |
-|---|---|---|---|---|---|
-| [git-commit](skills/general/git-commit/SKILL.md) | [github/awesome-copilot](https://github.com/github/awesome-copilot) | Not declared | [4f4796f0bf30](https://github.com/github/awesome-copilot/tree/4f4796f0bf30e105700f97ed8408c12b6aa95e06) | 1.0.0 | MIT |
-<!-- skillctl:external-sources:end -->
 
 ## Add or update a skill
 

@@ -61,9 +61,9 @@
       "version": "1.0.0"
     },
     {
-      "category": "codex",
+      "category": "dsh",
       "name": "codex-route",
-      "source": "skills/codex/codex-route",
+      "source": "skills/dsh/codex-route",
       "targets": [
         "claude-code",
         "codex",
@@ -72,9 +72,9 @@
       "version": "1.0.0"
     },
     {
-      "category": "codex",
+      "category": "dsh",
       "name": "codex-task-routing",
-      "source": "skills/codex/codex-task-routing",
+      "source": "skills/dsh/codex-task-routing",
       "targets": [
         "claude-code",
         "codex",
@@ -94,9 +94,9 @@
       "version": "1.0.0"
     },
     {
-      "category": "general",
+      "category": "dsh",
       "name": "deploy-dsh",
-      "source": "skills/general/deploy-dsh",
+      "source": "skills/dsh/deploy-dsh",
       "targets": [
         "claude-code",
         "codex",
@@ -195,6 +195,18 @@
     },
     {
       "category": "general",
+      "name": "planning-with-files",
+      "source": "skills/general/planning-with-files",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.1.0",
+      "origin": "external"
+    },
+    {
+      "category": "general",
       "name": "project-code-map",
       "source": "skills/general/project-code-map",
       "targets": [
@@ -257,7 +269,7 @@
         "codex",
         "kimi"
       ],
-      "version": "1.1.0"
+      "version": "1.1.1"
     },
     {
       "category": "general",

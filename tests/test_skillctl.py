@@ -15,6 +15,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILLCTL = ROOT / "tools" / "skillctl.py"
 COMMAND_TIMEOUT_SECONDS = 30
+REGISTRY = json.loads((ROOT / "registry.json").read_text())
+
+
+def expected_skill_names(target: str) -> set[str]:
+    return {entry["name"] for entry in REGISTRY["skills"] if target in entry["targets"]}
 
 
 def run_skillctl(*arguments: str) -> subprocess.CompletedProcess[str]:
@@ -42,9 +47,10 @@ class SkillCtlRenderTests(unittest.TestCase):
     def test_repository_validates(self) -> None:
         result = run_skillctl("validate")
         self.assertEqual(result.returncode, 0, result.stderr)
-        registry = json.loads((ROOT / "registry.json").read_text(encoding="utf-8"))
-        expected = f"validated {len(registry['skills'])} skills and {len(registry['targets'])} targets"
-        self.assertIn(expected, result.stdout)
+        self.assertIn(
+            f"validated {len(REGISTRY['skills'])} skills and {len(REGISTRY['targets'])} targets",
+            result.stdout,
+        )
 
     def test_render_is_repeatable_and_check_reports_no_diff(self) -> None:
         with tempfile.TemporaryDirectory() as temp_text:
@@ -70,8 +76,9 @@ class SkillCtlRenderTests(unittest.TestCase):
             manifest = json.loads((output / "codex" / "manifest.json").read_text())
             self.assertEqual(manifest["$schema"], "manifest.schema.json")
             self.assertEqual(manifest["target"], "codex")
-            registry = json.loads((ROOT / "registry.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(manifest["skills"]), sum("codex" in skill["targets"] for skill in registry["skills"]))
+            self.assertEqual(
+                {entry["name"] for entry in manifest["skills"]}, expected_skill_names("codex")
+            )
             self.assertFalse((output / "codex" / "skills" / "cc-create-skill").exists())
             rendered = (output / "codex" / "skills" / "project-code-map" / "SKILL.md").read_text()
             self.assertIn("## Codex convention", rendered)
@@ -189,8 +196,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             lock = json.loads((destination / "agent-skills.lock.json").read_text())
             self.assertEqual(lock["mode"], "copy")
             self.assertEqual(lock["target"], "codex")
-            registry = json.loads((ROOT / "registry.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(lock["skills"]), sum("codex" in skill["targets"] for skill in registry["skills"]))
+            self.assertEqual(set(lock["skills"]), expected_skill_names("codex"))
             self.assertTrue((destination / "better-shit" / "SKILL.md").is_file())
 
             checked_after = run_skillctl("sync", "--target", "codex", "--home", str(home), "--check")
@@ -309,8 +315,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             self.assertEqual(installed.returncode, 0, installed.stderr)
             lock = json.loads((destination / "agent-skills.lock.json").read_text())
             self.assertEqual(lock["mode"], "symlink")
-            registry = json.loads((ROOT / "registry.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(lock["skills"]), sum("claude-code" in skill["targets"] for skill in registry["skills"]))
+            self.assertEqual(set(lock["skills"]), expected_skill_names("claude-code"))
             for name, entry in lock["skills"].items():
                 installed_skill = destination / name
                 self.assertTrue(installed_skill.is_symlink())
