@@ -26,6 +26,10 @@ Portable sources use the common `SKILL.md` format with only `name` and `descript
 
 The three `cc-*` skills are Claude Code-specific, and `codex-check-quota` is Codex-specific. Other registered skills declare their supported targets in `registry.json`.
 
+## Internal workflow skills
+
+The `skills/if/` category contains internal workflow skills. [AIDA](skills/if/aida/SKILL.md) covers client installation and Session synchronization, requirements and tasks, and daily and weekly reports. Its text-only references preserve all 38 articles visible to the engineer role across the six guide modules; the guide snapshot was extracted on 2026-10-14. The skill supports all three targets.
+
 ## Upstream attribution: planning-with-files
 
 The [planning-with-files skill](skills/general/planning-with-files/SKILL.md) is a portable adaptation of the upstream project listed below. Its [generated attribution](skills/general/planning-with-files/references/upstream.md) records licensing, pinned revision, and local adaptations.

@@ -3,6 +3,17 @@
   "format_version": 1,
   "skills": [
     {
+      "category": "if",
+      "name": "aida",
+      "source": "skills/if/aida",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
       "category": "general",
       "name": "atomic-worker-pipeline",
       "source": "skills/general/atomic-worker-pipeline",

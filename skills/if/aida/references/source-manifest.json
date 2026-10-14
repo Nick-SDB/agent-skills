@@ -1,0 +1,319 @@
+{
+  "source": "http://113.100.143.91:9180/dashboard",
+  "entry": "使用指南 → AIDA 指南中心",
+  "role": "工程师",
+  "extracted_at": "2026-10-14",
+  "timezone": "Asia/Shanghai",
+  "module_count": 6,
+  "article_count": 38,
+  "image_count": 0,
+  "body_verification": "纯文字正文除 Markdown 排版和空白字符外，归一化长度与浏览器提取值及 FNV-1a32 校验值一致；图片与图片引用已移除，说明文字保留。",
+  "articles": [
+    {
+      "module": "快速开始",
+      "title": "5 分钟生成第一份 AI 日报",
+      "file": "01-quick-start.md",
+      "normalized_length": 1413,
+      "fnv1a32_utf16": "691f1e0b",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "快速开始",
+      "title": "上传后为什么没有生成内容",
+      "file": "01-quick-start.md",
+      "normalized_length": 378,
+      "fnv1a32_utf16": "3e1abd7b",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "快速开始",
+      "title": "登录或上传失败怎么办",
+      "file": "01-quick-start.md",
+      "normalized_length": 336,
+      "fnv1a32_utf16": "7cf6003c",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "安装或更新 AIDA 客户端",
+      "file": "02-client.md",
+      "normalized_length": 575,
+      "fnv1a32_utf16": "60a12691",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "登录客户端并检查状态",
+      "file": "02-client.md",
+      "normalized_length": 266,
+      "fnv1a32_utf16": "2f9e7c66",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "个人设备上传 Session",
+      "file": "02-client.md",
+      "normalized_length": 1000,
+      "fnv1a32_utf16": "8f32b722",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "共享开发机使用团队同步",
+      "file": "02-client.md",
+      "normalized_length": 1235,
+      "fnv1a32_utf16": "19a32a43",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "设置每天自动同步",
+      "file": "02-client.md",
+      "normalized_length": 406,
+      "fnv1a32_utf16": "aff2975d",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "同步其他 AI 编程客户端",
+      "file": "02-client.md",
+      "normalized_length": 491,
+      "fnv1a32_utf16": "ddbb6d0e",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "Session 切片如何形成",
+      "file": "02-client.md",
+      "normalized_length": 659,
+      "fnv1a32_utf16": "ba7fa2cd",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "AIDA 客户端",
+      "title": "选择、上传与问题排查",
+      "file": "02-client.md",
+      "normalized_length": 622,
+      "fnv1a32_utf16": "4cbaee6a",
+      "last_checked": "2026-07-28"
+    },
+    {
+      "module": "工作台",
+      "title": "从工作台开始一天的工作",
+      "file": "03-dashboard.md",
+      "normalized_length": 217,
+      "fnv1a32_utf16": "4e301074",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "工作台",
+      "title": "查看和处理我的事项",
+      "file": "03-dashboard.md",
+      "normalized_length": 196,
+      "fnv1a32_utf16": "31a834d7",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "工作台",
+      "title": "判断和下钻风险",
+      "file": "03-dashboard.md",
+      "normalized_length": 216,
+      "fnv1a32_utf16": "e644664e",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "工作台",
+      "title": "使用报告处理区",
+      "file": "03-dashboard.md",
+      "normalized_length": 132,
+      "fnv1a32_utf16": "7489da82",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "工作台",
+      "title": "不同角色在工作台关注什么",
+      "file": "03-dashboard.md",
+      "normalized_length": 90,
+      "fnv1a32_utf16": "c4433e03",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "理解需求看板的工作流",
+      "file": "04-requirements.md",
+      "normalized_length": 369,
+      "fnv1a32_utf16": "18bc9c53",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "筛选范围和切换视图",
+      "file": "04-requirements.md",
+      "normalized_length": 216,
+      "fnv1a32_utf16": "7217e700",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "创建一条可执行的需求",
+      "file": "04-requirements.md",
+      "normalized_length": 490,
+      "fnv1a32_utf16": "891972f",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "阅读需求详情",
+      "file": "04-requirements.md",
+      "normalized_length": 301,
+      "fnv1a32_utf16": "bec2b49e",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "理解需求的查看与编辑权限",
+      "file": "04-requirements.md",
+      "normalized_length": 157,
+      "fnv1a32_utf16": "2304899c",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "拆分和推进任务",
+      "file": "04-requirements.md",
+      "normalized_length": 500,
+      "fnv1a32_utf16": "beadde3a",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "设置依赖并处理阻塞",
+      "file": "04-requirements.md",
+      "normalized_length": 225,
+      "fnv1a32_utf16": "9524e61a",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "使用验收标准",
+      "file": "04-requirements.md",
+      "normalized_length": 291,
+      "fnv1a32_utf16": "ec6e08f0",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "关联 session 和查看动态",
+      "file": "04-requirements.md",
+      "normalized_length": 303,
+      "fnv1a32_utf16": "9235fdd",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "需求看板",
+      "title": "关注需求和理解关注度",
+      "file": "04-requirements.md",
+      "normalized_length": 127,
+      "fnv1a32_utf16": "5f217067",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "日报",
+      "title": "认识日报页面",
+      "file": "05-daily-reports.md",
+      "normalized_length": 153,
+      "fnv1a32_utf16": "3c668b65",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "日报",
+      "title": "查看和管理我的日报记录",
+      "file": "05-daily-reports.md",
+      "normalized_length": 236,
+      "fnv1a32_utf16": "9b419b55",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "日报",
+      "title": "填写或补写日报",
+      "file": "05-daily-reports.md",
+      "normalized_length": 373,
+      "fnv1a32_utf16": "6053332f",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "日报",
+      "title": "用 AI 生成日报",
+      "file": "05-daily-reports.md",
+      "normalized_length": 620,
+      "fnv1a32_utf16": "9a8f8d23",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "日报",
+      "title": "选择 session 作为日报上下文",
+      "file": "05-daily-reports.md",
+      "normalized_length": 453,
+      "fnv1a32_utf16": "4d8bd156",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "日报",
+      "title": "浏览成员日报",
+      "file": "05-daily-reports.md",
+      "normalized_length": 153,
+      "fnv1a32_utf16": "c82dd44",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "周报",
+      "title": "认识周报页面",
+      "file": "06-weekly-reports.md",
+      "normalized_length": 134,
+      "fnv1a32_utf16": "17f0d05b",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "周报",
+      "title": "查看和管理我的周报记录",
+      "file": "06-weekly-reports.md",
+      "normalized_length": 132,
+      "fnv1a32_utf16": "65cd5ea",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "周报",
+      "title": "填写或补写周报",
+      "file": "06-weekly-reports.md",
+      "normalized_length": 148,
+      "fnv1a32_utf16": "3f401999",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "周报",
+      "title": "用 AI 生成周报",
+      "file": "06-weekly-reports.md",
+      "normalized_length": 258,
+      "fnv1a32_utf16": "f9c455d5",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "周报",
+      "title": "选择 session 作为周报上下文",
+      "file": "06-weekly-reports.md",
+      "normalized_length": 256,
+      "fnv1a32_utf16": "8376c050",
+      "last_checked": "2026-07-14"
+    },
+    {
+      "module": "周报",
+      "title": "浏览成员周报",
+      "file": "06-weekly-reports.md",
+      "normalized_length": 141,
+      "fnv1a32_utf16": "ee20b111",
+      "last_checked": "2026-07-14"
+    }
+  ],
+  "format": "text-only",
+  "repository_adaptation": "仓库版将共享目录的具体示例路径替换为通用占位说明；归一化校验记录对应移植前已经核对的纯文字原文。"
+}
