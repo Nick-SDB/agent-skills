@@ -23,7 +23,7 @@ def archive_tree(source: Path, archive_path: Path, archive_root: str) -> None:
         temporary = Path(raw.name)
         with gzip.GzipFile(filename="", mode="wb", fileobj=raw, compresslevel=9, mtime=FIXED_MTIME) as zipped:
             with tarfile.open(fileobj=zipped, mode="w", format=tarfile.PAX_FORMAT) as archive:
-                paths = [source, *sorted(source.rglob("*"))]
+                paths = [source, *sorted(source.rglob("*"), key=lambda path: path.relative_to(source).as_posix())]
                 for path in paths:
                     relative_name = path.relative_to(source).as_posix()
                     archive_name = archive_root if not relative_name or relative_name == "." else f"{archive_root}/{relative_name}"

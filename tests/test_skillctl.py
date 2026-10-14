@@ -11,6 +11,8 @@ import unittest
 from collections.abc import Callable
 from pathlib import Path
 
+from symlink_support import require_symlink
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLCTL = ROOT / "tools" / "skillctl.py"
@@ -97,6 +99,7 @@ class SkillCtlRenderTests(unittest.TestCase):
             self.assertIn("content differs: skills/better-shit/SKILL.md", checked.stderr)
 
     def test_check_rejects_symlinked_output_file(self) -> None:
+        require_symlink(target_is_directory=False)
         with tempfile.TemporaryDirectory() as temp_text:
             root = Path(temp_text)
             output = root / "dist"
@@ -297,6 +300,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             self.assertFalse(retired.exists())
 
     def test_symlink_install_uses_isolated_render_root(self) -> None:
+        require_symlink()
         with tempfile.TemporaryDirectory() as temp_text:
             root = Path(temp_text)
             destination = root / "skills"
@@ -388,6 +392,7 @@ class SkillCtlInstallTests(unittest.TestCase):
             self.assertTrue((override / "agent-skills.lock.json").is_file())
 
     def test_explicit_symlink_destination_is_rejected(self) -> None:
+        require_symlink()
         with tempfile.TemporaryDirectory() as temp_text:
             root = Path(temp_text)
             real_destination = root / "real-skills"

@@ -4,6 +4,8 @@ import hashlib
 import json
 import os
 from pathlib import Path
+
+from symlink_support import require_symlink
 import subprocess
 import sys
 import tempfile
@@ -114,6 +116,7 @@ class PlanningWithFilesTests(unittest.TestCase):
         self.run_helper("check", code=2)
 
     def test_initialization_refuses_symlinked_planning_root(self):
+        require_symlink()
         with tempfile.TemporaryDirectory() as outside:
             (self.project / ".planning").symlink_to(outside, target_is_directory=True)
             self.run_helper("init", "Experiment", code=2)
