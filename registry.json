@@ -72,6 +72,17 @@
       "version": "1.0.0"
     },
     {
+      "category": "general",
+      "name": "codex-cli-setup",
+      "source": "skills/general/codex-cli-setup",
+      "targets": [
+        "claude-code",
+        "codex",
+        "kimi"
+      ],
+      "version": "1.0.0"
+    },
+    {
       "category": "dsh",
       "name": "codex-route",
       "source": "skills/dsh/codex-route",
